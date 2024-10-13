@@ -2,6 +2,7 @@ package com.pavelryzh.lab02.ui.canvas;
 
 import com.pavelryzh.lab02.ui.CellWidget;
 import javafx.scene.canvas.GraphicsContext;
+import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.*;
 
 public class CanvasCellWidget implements CellWidget {
 
@@ -24,9 +25,7 @@ public class CanvasCellWidget implements CellWidget {
     public void setState(State state) {
         switch(state) {
             case EMPTY:
-                System.out.println("WIP");
-                //CanvasFieldWidget.HEIGHT;
-                //CanvasFieldWidget.WIDTH
+                System.out.println("");
                 //todo
                 break;
             case FILLED:
@@ -34,15 +33,15 @@ public class CanvasCellWidget implements CellWidget {
                 draw();
                 break;
             default:
-                System.out.println("ERROR");
+                System.err.println("Unknown state: " + state);
         }
     }
 
     private void clear() {
-        gc.clearRect(0, 0, CanvasFieldWidget.WIDTH, CanvasFieldWidget.HEIGHT);
+        gc.clearRect(0, 0, WIDTH, HEIGHT);
     }
 
     void draw() {
-
+        gc.strokeRect(x, y, WIDTH, HEIGHT);
     }
 }
