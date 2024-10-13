@@ -2,13 +2,13 @@ package com.pavelryzh.lab02;
 
 import com.pavelryzh.lab02.ui.CellWidget;
 import com.pavelryzh.lab02.ui.FieldWidget;
-import com.pavelryzh.lab02.ui.canvas.CanvasCellWidget;
 import com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget;
 import javafx.application.Application;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -36,23 +36,25 @@ public class HelloApplication extends Application {
         vBox.getChildren().add(canvas);
         vBox.setAlignment(Pos.CENTER);
         Button uploadButton = new Button("Upload");
-        CellWidget.State[][] cellWidgetState = new CellWidget.State[FIELD_SIZE][FIELD_SIZE];
-        for (int i = 0; i < FIELD_SIZE; i++) {
-            for (int j = 0; j < FIELD_SIZE; j++) {
-                cellWidgetState[i][j] = CellWidget.State.EMPTY;
-            }
-        }
-        fieldWidget = new CanvasFieldWidget(canvas);
-        state = new FieldWidget.State(
-                cellWidgetState);
+        //fieldWidget.setFieldState(INACTIVE);
 
 //                            state.CellWidget.State[i] = new CellWidget.State[] {CellWidget.State.EMPTY, CellWidget.State.EMPTY, CellWidget.State.EMPTY},
 //                        }
 //                new FieldWidget.State.Notification(0)
         //System.out.println(Arrays.deepToString(cellWidgetState));
-        fieldWidget.setState(state);
 
         uploadButton.setOnAction(actionEvent -> {
+
+            CellWidget.State[][] cellWidgetState = new CellWidget.State[FIELD_SIZE][FIELD_SIZE];
+            for (int i = 0; i < FIELD_SIZE; i++) {
+                for (int j = 0; j < FIELD_SIZE; j++) {
+                    cellWidgetState[i][j] = CellWidget.State.EMPTY;
+                }
+            }
+            fieldWidget = new CanvasFieldWidget(canvas);
+            state = new FieldWidget.State(cellWidgetState);
+            fieldWidget.setState(state);
+
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open File");
             fileChooser.setInitialDirectory(new File("assets/crossword"));
@@ -60,7 +62,7 @@ public class HelloApplication extends Application {
             if (selectedFile != null) {
                 try {
                     fieldWidget.setFieldState(ACTIVE);
-                    drawField(selectedFile);
+                    uploadField(selectedFile);
 //                    new FieldWidget.State = INACTIVE;
                     //drawFigures(selectedFile, canvas);
                 } catch (IOException e) {
@@ -78,7 +80,7 @@ public class HelloApplication extends Application {
 
     }
 
-    void drawField(File file) throws IOException {
+    void uploadField(File file) throws IOException {
         BufferedInputStream test = new BufferedInputStream(new FileInputStream(file.getPath()));
         InputStreamReader reader = new InputStreamReader(test, StandardCharsets.UTF_8);
 
@@ -114,6 +116,10 @@ public class HelloApplication extends Application {
             }
             //System.out.println(Arrays.deepToString(cellWidgetStates));
         }
+        fieldWidget.setOnCellClickListener( (x, y) -> {
+            System.out.println("Cell: " + x + ", " + y);
+            state.cells()[x][y] = CellWidget.State.FILLED;
+        });
         fieldWidget.setState(new FieldWidget.State(cellWidgetStates));
     }
     public static void main(String[] args) {

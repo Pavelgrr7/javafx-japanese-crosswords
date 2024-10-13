@@ -8,9 +8,10 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class CanvasFieldWidget implements FieldWidget {
 
-    private final Canvas canvas;
+    private static Canvas canvas;
     private final GraphicsContext gc;
     private final CellWidget[][] cells;
+    private OnCellClickListener listener;
 
     public static final int WIDTH = 50;
     public static final int HEIGHT = 50;
@@ -21,14 +22,17 @@ public class CanvasFieldWidget implements FieldWidget {
 //    public static final int EMPTY = 0;
 
     public CanvasFieldWidget(Canvas canvas) {
-        this.canvas = canvas;
+        CanvasFieldWidget.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
 
         cells = new CellWidget[FIELD_SIZE][FIELD_SIZE];
 
         for(int i = 0; i < FIELD_SIZE; i++) {
             for(int j = 0; j < FIELD_SIZE; j++) {
-                cells[i][j] = new CanvasCellWidget(i * WIDTH, j * HEIGHT, gc);
+                cells[i][j] = new CanvasCellWidget(i * WIDTH, j * HEIGHT, canvas);
+                final int x = i * WIDTH;
+                final int y = j * WIDTH;
+                cells[i][j].setOnClickListener(() -> listener.onClick(x, y));
             }
         }
     }
@@ -41,7 +45,7 @@ public class CanvasFieldWidget implements FieldWidget {
                     System.out.println("state is null: you probably uploaded a file with wrong field size!");
                     //System.exit(1);
                 } else {
-                    System.out.println(state.cells()[i][j]);
+                    //System.out.println(state.cells()[i][j]);
                     cells[i][j].setState(state.cells()[j][i]);
                 }
             }
@@ -55,6 +59,6 @@ public class CanvasFieldWidget implements FieldWidget {
 
     @Override
     public void setOnCellClickListener(OnCellClickListener listener) {
-
+        this.listener = listener;
     }
 }

@@ -1,29 +1,44 @@
 package com.pavelryzh.lab02.ui.canvas;
 
 import com.pavelryzh.lab02.ui.CellWidget;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+
+
 import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.*;
 
 public class CanvasCellWidget implements CellWidget {
 
     private final int x;
     private final int y;
+    private final Canvas canvas;
     private final GraphicsContext gc;
+    private OnClickListener listener;
 
-    public CanvasCellWidget(int x, int y, GraphicsContext gc) {
+    public CanvasCellWidget(int x, int y, Canvas canvas) {
         this.x = x + PADDING;
         this.y = y + PADDING;
-        this.gc = gc;
+        this.canvas = canvas;
+        this.gc = canvas.getGraphicsContext2D();
+        canvas.setOnMouseClicked( e -> {
+                    if (listener != null &&
+                            e.getX() > x * WIDTH && e.getX() < (x + 1) * WIDTH &&
+                            e.getY() > y * HEIGHT && e.getY() < (y + 1) * HEIGHT) {
+                        listener.onClick();
+                    }
+        });
     }
 
     @Override
     public void setOnClickListener(OnClickListener listener) {
-
+        this.listener = listener;
     }
 
     @Override
     public void setState(State state) {
+
         if (CanvasFieldWidget.fieldState == FieldState.ACTIVE) {
+            drawField();
             switch (state) {
                 case EMPTY:
                     drawEmpty();
@@ -32,6 +47,7 @@ public class CanvasCellWidget implements CellWidget {
                     drawFilled();
                     break;
                 default:
+                    clear();
                     System.err.println("Unknown state: " + state);
             }
         }
@@ -47,5 +63,11 @@ public class CanvasCellWidget implements CellWidget {
 
     void drawFilled() {
         gc.fillRect(x, y, WIDTH, HEIGHT);
+    }
+
+    void drawField(){
+//        System.out.println();
+        gc.strokeLine(PADDING,0, PADDING, canvas.getWidth());
+        gc.strokeLine(0, PADDING, canvas.getHeight(), PADDING);
     }
 }
