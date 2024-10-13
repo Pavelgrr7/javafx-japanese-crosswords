@@ -25,12 +25,10 @@ public class CanvasCellWidget implements CellWidget {
     public void setState(State state) {
         switch(state) {
             case EMPTY:
-                System.out.println("");
-                //todo
+                drawEmpty();
                 break;
             case FILLED:
-                //todo 2
-                draw();
+                drawFilled();
                 break;
             default:
                 System.err.println("Unknown state: " + state);
@@ -41,7 +39,11 @@ public class CanvasCellWidget implements CellWidget {
         gc.clearRect(0, 0, WIDTH, HEIGHT);
     }
 
-    void draw() {
+    void drawEmpty() {
         gc.strokeRect(x, y, WIDTH, HEIGHT);
+    }
+
+    void drawFilled() {
+        gc.fillRect(x, y, WIDTH, HEIGHT);
     }
 }

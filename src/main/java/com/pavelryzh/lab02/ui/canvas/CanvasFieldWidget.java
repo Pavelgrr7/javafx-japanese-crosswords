@@ -12,8 +12,8 @@ public class CanvasFieldWidget implements FieldWidget {
     private final GraphicsContext gc;
     private final CellWidget[][] cells;
 
-    public static final int WIDTH = 40;
-    public static final int HEIGHT = 40;
+    public static final int WIDTH = 150;
+    public static final int HEIGHT = 150;
     public static final int FIELD_SIZE = 3;
 //    public static final int FILLED = 1;
 //    public static final int EMPTY = 0;
@@ -36,7 +36,7 @@ public class CanvasFieldWidget implements FieldWidget {
         for(int i = 0; i < FIELD_SIZE; i++) {
             for (int j = 0; j < FIELD_SIZE; j++) {
                 System.out.println(state.cells()[i][j]);
-                cells[i][j].setState(state.cells()[i][j]);
+                cells[i][j].setState(state.cells()[j][i]);
             }
         }
     }

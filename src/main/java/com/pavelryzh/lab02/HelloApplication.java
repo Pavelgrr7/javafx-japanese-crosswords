@@ -16,8 +16,10 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import static com.pavelryzh.lab02.ui.FieldWidget.FieldState.*;
+import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.FIELD_SIZE;
 
 //import java.io.IOException;
 
@@ -90,23 +92,26 @@ public class HelloApplication extends Application {
             if (fileCell == '\n' || fileCell == '\r') {
                 continue;
             }
+
             System.out.printf("Column: %d, Row: %d, Element: %c\n", i, j, fileCell);
+
             if (fileCell == '1') {
                 currCellState[i] = CellWidget.State.FILLED;
-                System.out.println("added filled cell");
+                //System.out.println("added filled cell");
             } else {
                 currCellState[i] = CellWidget.State.EMPTY;
-                System.out.println("added empty cell");
+                //System.out.println("added empty cell");
             }
 //            System.out.println("Cell: " + fileCell);
             //System.out.printf("%s, %s: %s\n", i, j, fileCell);
             i++;
-            if (i == 3) {
+            if (i == FIELD_SIZE) {
                 i = 0; // Сброс счетчика столбцов
-                cellWidgetStates[j] = currCellState;
+                cellWidgetStates[j] = Arrays.copyOf(currCellState, currCellState.length);
                 j++;   // Переход к следующей строке
 
             }
+            System.out.println(Arrays.deepToString(cellWidgetStates));
         }
         fieldWidget.setState(new FieldWidget.State(cellWidgetStates));
     }
