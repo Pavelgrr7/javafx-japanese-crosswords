@@ -16,8 +16,10 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import static com.pavelryzh.lab02.ui.FieldWidget.FieldState.*;
+import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.FIELD_SIZE;
 
 //import java.io.IOException;
 
@@ -34,16 +36,20 @@ public class HelloApplication extends Application {
         vBox.getChildren().add(canvas);
         vBox.setAlignment(Pos.CENTER);
         Button uploadButton = new Button("Upload");
-
+        CellWidget.State[][] cellWidgetState = new CellWidget.State[FIELD_SIZE][FIELD_SIZE];
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
+                cellWidgetState[i][j] = CellWidget.State.EMPTY;
+            }
+        }
         fieldWidget = new CanvasFieldWidget(canvas);
         state = new FieldWidget.State(
-                new CellWidget.State[][] {
-                        new CellWidget.State[] {CellWidget.State.EMPTY, CellWidget.State.EMPTY, CellWidget.State.EMPTY},
-                        new CellWidget.State[] {CellWidget.State.EMPTY, CellWidget.State.EMPTY, CellWidget.State.EMPTY},
-                        new CellWidget.State[] {CellWidget.State.EMPTY, CellWidget.State.EMPTY, CellWidget.State.EMPTY},
-                        }
+                cellWidgetState);
+
+//                            state.CellWidget.State[i] = new CellWidget.State[] {CellWidget.State.EMPTY, CellWidget.State.EMPTY, CellWidget.State.EMPTY},
+//                        }
 //                new FieldWidget.State.Notification(0)
-        );
+        //System.out.println(Arrays.deepToString(cellWidgetState));
         fieldWidget.setState(state);
 
         uploadButton.setOnAction(actionEvent -> {
@@ -53,8 +59,8 @@ public class HelloApplication extends Application {
             File selectedFile = (fileChooser.showOpenDialog(stage));
             if (selectedFile != null) {
                 try {
-                    drawField(selectedFile);
                     fieldWidget.setFieldState(ACTIVE);
+                    drawField(selectedFile);
 //                    new FieldWidget.State = INACTIVE;
                     //drawFigures(selectedFile, canvas);
                 } catch (IOException e) {
@@ -76,8 +82,8 @@ public class HelloApplication extends Application {
         BufferedInputStream test = new BufferedInputStream(new FileInputStream(file.getPath()));
         InputStreamReader reader = new InputStreamReader(test, StandardCharsets.UTF_8);
 
-        CellWidget.State[][] cellWidgetStates = new CellWidget.State[3][3];
-        CellWidget.State[] currCellState = new CellWidget.State[3];
+        CellWidget.State[][] cellWidgetStates = new CellWidget.State[FIELD_SIZE][FIELD_SIZE];
+        CellWidget.State[] currCellState = new CellWidget.State[FIELD_SIZE];
 
         int cell;
         int i = 0;
@@ -86,27 +92,27 @@ public class HelloApplication extends Application {
         while ((cell = reader.read()) != -1) {
             char fileCell = (char) cell;
 
-            // Игнорируем символы новой строки и возврата каретки
+            // символы новой строки и возврата каретки
             if (fileCell == '\n' || fileCell == '\r') {
                 continue;
             }
-            System.out.printf("Column: %d, Row: %d, Element: %c\n", i, j, fileCell);
+//            System.out.printf("Column: %d, Row: %d, Element: %c\n", i, j, fileCell);
+
             if (fileCell == '1') {
                 currCellState[i] = CellWidget.State.FILLED;
-                System.out.println("added filled cell");
             } else {
                 currCellState[i] = CellWidget.State.EMPTY;
-                System.out.println("added empty cell");
             }
 //            System.out.println("Cell: " + fileCell);
             //System.out.printf("%s, %s: %s\n", i, j, fileCell);
             i++;
-            if (i == 3) {
-                i = 0; // Сброс счетчика столбцов
-                cellWidgetStates[j] = currCellState;
-                j++;   // Переход к следующей строке
+            if (i == FIELD_SIZE) {
+                i = 0;
+                cellWidgetStates[j] = Arrays.copyOf(currCellState, currCellState.length);
+                j++;
 
             }
+            //System.out.println(Arrays.deepToString(cellWidgetStates));
         }
         fieldWidget.setState(new FieldWidget.State(cellWidgetStates));
     }

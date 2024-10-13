@@ -11,8 +11,8 @@ public class CanvasCellWidget implements CellWidget {
     private final GraphicsContext gc;
 
     public CanvasCellWidget(int x, int y, GraphicsContext gc) {
-        this.x = x;
-        this.y = y;
+        this.x = x + PADDING;
+        this.y = y + PADDING;
         this.gc = gc;
     }
 
@@ -23,17 +23,17 @@ public class CanvasCellWidget implements CellWidget {
 
     @Override
     public void setState(State state) {
-        switch(state) {
-            case EMPTY:
-                System.out.println("");
-                //todo
-                break;
-            case FILLED:
-                //todo 2
-                draw();
-                break;
-            default:
-                System.err.println("Unknown state: " + state);
+        if (CanvasFieldWidget.fieldState == FieldState.ACTIVE) {
+            switch (state) {
+                case EMPTY:
+                    drawEmpty();
+                    break;
+                case FILLED:
+                    drawFilled();
+                    break;
+                default:
+                    System.err.println("Unknown state: " + state);
+            }
         }
     }
 
@@ -41,7 +41,11 @@ public class CanvasCellWidget implements CellWidget {
         gc.clearRect(0, 0, WIDTH, HEIGHT);
     }
 
-    void draw() {
+    void drawEmpty() {
         gc.strokeRect(x, y, WIDTH, HEIGHT);
+    }
+
+    void drawFilled() {
+        gc.fillRect(x, y, WIDTH, HEIGHT);
     }
 }
