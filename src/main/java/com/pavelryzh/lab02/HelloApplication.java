@@ -3,6 +3,7 @@ package com.pavelryzh.lab02;
 import com.pavelryzh.lab02.ui.CellWidget;
 import com.pavelryzh.lab02.ui.FieldWidget;
 import com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget;
+import com.pavelryzh.lab02.ui.canvas.CanvasNumbers;
 import javafx.application.Application;
 
 import javafx.geometry.Pos;
@@ -20,6 +21,8 @@ import java.util.Arrays;
 
 import static com.pavelryzh.lab02.ui.FieldWidget.FieldState.*;
 import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.FIELD_SIZE;
+import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.FIELD_WIDTH;
+import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.FIELD_HEIGHT;
 
 //import java.io.IOException;
 
@@ -48,12 +51,17 @@ public class HelloApplication extends Application {
             CellWidget.State[][] cellWidgetState = new CellWidget.State[FIELD_SIZE][FIELD_SIZE];
             for (int i = 0; i < FIELD_SIZE; i++) {
                 for (int j = 0; j < FIELD_SIZE; j++) {
-                    cellWidgetState[i][j] = CellWidget.State.EMPTY;
+                    cellWidgetState[i][j] = CellWidget.State.NULL;
                 }
             }
             fieldWidget = new CanvasFieldWidget(canvas);
             state = new FieldWidget.State(cellWidgetState);
             fieldWidget.setState(state);
+
+            fieldWidget.setOnCellClickListener( (x, y) -> {
+                System.out.println("Cell: " + x + ", " + y);
+                state.cells()[x][y] = CellWidget.State.FILLED;
+            });
 
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open File");
@@ -64,7 +72,6 @@ public class HelloApplication extends Application {
                     fieldWidget.setFieldState(ACTIVE);
                     uploadField(selectedFile);
 //                    new FieldWidget.State = INACTIVE;
-                    //drawFigures(selectedFile, canvas);
                 } catch (IOException e) {
                     System.out.println("Error occurred while reading file");
                     e.printStackTrace();
@@ -81,16 +88,17 @@ public class HelloApplication extends Application {
     }
 
     void uploadField(File file) throws IOException {
+
         BufferedInputStream test = new BufferedInputStream(new FileInputStream(file.getPath()));
         InputStreamReader reader = new InputStreamReader(test, StandardCharsets.UTF_8);
 
-        CellWidget.State[][] cellWidgetStates = new CellWidget.State[FIELD_SIZE][FIELD_SIZE];
+        CellWidget.State[][] cellWidgetStates = new CellWidget.State[FIELD_WIDTH][FIELD_HEIGHT];
         CellWidget.State[] currCellState = new CellWidget.State[FIELD_SIZE];
 
         int cell;
         int i = 0;
         int j = 0;
-
+        CanvasNumbers numbers = new CanvasNumbers(FIELD_WIDTH, FIELD_HEIGHT);
         while ((cell = reader.read()) != -1) {
             char fileCell = (char) cell;
 
@@ -100,31 +108,32 @@ public class HelloApplication extends Application {
             }
 //            System.out.printf("Column: %d, Row: %d, Element: %c\n", i, j, fileCell);
 
-            if (fileCell == '1') {
+            // 49 - еденица :)
+            if (fileCell == 49) {
+                //System.out.println((int)(fileCell));
                 currCellState[i] = CellWidget.State.FILLED;
             } else {
                 currCellState[i] = CellWidget.State.EMPTY;
             }
-//            System.out.println("Cell: " + fileCell);
-            //System.out.printf("%s, %s: %s\n", i, j, fileCell);
+            numbers.addElement(i, j, fileCell);
             i++;
-            if (i == FIELD_SIZE) {
+            if (i == FIELD_WIDTH) {
                 i = 0;
                 cellWidgetStates[j] = Arrays.copyOf(currCellState, currCellState.length);
                 j++;
-
             }
-            //System.out.println(Arrays.deepToString(cellWidgetStates));
         }
-        fieldWidget.setOnCellClickListener( (x, y) -> {
-            System.out.println("Cell: " + x + ", " + y);
-            state.cells()[x][y] = CellWidget.State.FILLED;
-        });
+        numbers.finishProcessing();
+        System.out.printf("%s, %s \n", numbers.getRowSequences(), numbers.getColumnSequences());
         fieldWidget.setState(new FieldWidget.State(cellWidgetStates));
     }
+
+
+
     public static void main(String[] args) {
         launch();
     }
+
 
 //    public record FieldState(CanvasCellWidget[][] cells) {
 //

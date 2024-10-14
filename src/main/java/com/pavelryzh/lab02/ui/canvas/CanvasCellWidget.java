@@ -46,6 +46,9 @@ public class CanvasCellWidget implements CellWidget {
                 case FILLED:
                     drawFilled();
                     break;
+                case NULL:
+                    clear();
+                    break;
                 default:
                     clear();
                     System.err.println("Unknown state: " + state);
@@ -54,7 +57,7 @@ public class CanvasCellWidget implements CellWidget {
     }
 
     private void clear() {
-        gc.clearRect(0, 0, WIDTH, HEIGHT);
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     void drawEmpty() {
@@ -66,7 +69,6 @@ public class CanvasCellWidget implements CellWidget {
     }
 
     void drawField(){
-//        System.out.println();
         gc.strokeLine(PADDING,0, PADDING, canvas.getWidth());
         gc.strokeLine(0, PADDING, canvas.getHeight(), PADDING);
     }

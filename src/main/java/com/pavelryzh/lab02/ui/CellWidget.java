@@ -12,5 +12,6 @@ public interface CellWidget {
     enum State {
         EMPTY,
         FILLED,
+        NULL
     }
 }

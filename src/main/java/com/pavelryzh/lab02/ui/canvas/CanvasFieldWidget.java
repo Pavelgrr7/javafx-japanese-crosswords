@@ -13,11 +13,15 @@ public class CanvasFieldWidget implements FieldWidget {
     private final CellWidget[][] cells;
     private OnCellClickListener listener;
 
-    public static final int WIDTH = 50;
-    public static final int HEIGHT = 50;
+    public static final int CANVAS_WIDTH = 700;
+    public static final int CANVAS_HEIGHT = 700;
     public static final int FIELD_SIZE = 5;
+    public static final int FIELD_WIDTH = 5;
+    public static final int FIELD_HEIGHT = 5;
     public static final int PADDING = 100;
     public static FieldState fieldState;
+    public static final int WIDTH = (CANVAS_WIDTH - PADDING ) / FIELD_WIDTH;
+    public static final int HEIGHT = (CANVAS_HEIGHT - PADDING ) / FIELD_HEIGHT;
 //    public static final int FILLED = 1;
 //    public static final int EMPTY = 0;
 
@@ -31,7 +35,7 @@ public class CanvasFieldWidget implements FieldWidget {
             for(int j = 0; j < FIELD_SIZE; j++) {
                 cells[i][j] = new CanvasCellWidget(i * WIDTH, j * HEIGHT, canvas);
                 final int x = i * WIDTH;
-                final int y = j * WIDTH;
+                final int y = j * HEIGHT;
                 cells[i][j].setOnClickListener(() -> listener.onClick(x, y));
             }
         }
@@ -43,9 +47,7 @@ public class CanvasFieldWidget implements FieldWidget {
             for (int j = 0; j < FIELD_SIZE; j++) {
                 if (state == null) {
                     System.out.println("state is null: you probably uploaded a file with wrong field size!");
-                    //System.exit(1);
                 } else {
-                    //System.out.println(state.cells()[i][j]);
                     cells[i][j].setState(state.cells()[j][i]);
                 }
             }
@@ -54,7 +56,7 @@ public class CanvasFieldWidget implements FieldWidget {
 
     @Override
     public void setFieldState(FieldState fieldState) {
-        this.fieldState = fieldState;
+        CanvasFieldWidget.fieldState = fieldState;
     }
 
     @Override
