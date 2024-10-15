@@ -1,6 +1,8 @@
 package com.pavelryzh.lab02.ui;
 //import com.pavelryzh.lab02.HelloApplication.FieldState.Notification;
 
+import javafx.scene.canvas.GraphicsContext;
+
 public interface FieldWidget {
 
     void setState(State state);
@@ -25,4 +27,6 @@ public interface FieldWidget {
         public record Notification(int code) {
         }
     }
+
+    void drawNums(GraphicsContext gc);
 }
