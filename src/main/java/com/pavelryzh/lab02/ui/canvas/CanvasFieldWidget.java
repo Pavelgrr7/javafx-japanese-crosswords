@@ -1,13 +1,15 @@
 package com.pavelryzh.lab02.ui.canvas;
 
+import com.pavelryzh.lab02.Resources;
 import com.pavelryzh.lab02.ui.CellWidget;
 import com.pavelryzh.lab02.ui.FieldWidget;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+
+import static com.pavelryzh.lab02.Resources.numbers;
 
 public class CanvasFieldWidget implements FieldWidget {
 
@@ -16,28 +18,28 @@ public class CanvasFieldWidget implements FieldWidget {
     private final CellWidget[][] cells;
     private OnCellClickListener listener;
 
-    public static final int CANVAS_WIDTH = 700;
-    public static final int CANVAS_HEIGHT = 700;
-    public static final int FIELD_SIZE = 5;
-    public static final int FIELD_WIDTH = 5;
-    public static final int FIELD_HEIGHT = 5;
-    public static final int PADDING = 100;
+    public static int FIELD_WIDTH = Resources.WIDTH;
+    public static int FIELD_HEIGHT = Resources.HEIGHT;
     public static FieldState fieldState;
-    public static final int WIDTH = (CANVAS_WIDTH - PADDING ) / FIELD_WIDTH;
-    public static final int HEIGHT = (CANVAS_HEIGHT - PADDING ) / FIELD_HEIGHT;
-
-    public static CanvasNumbers numbers = new CanvasNumbers(FIELD_WIDTH, FIELD_HEIGHT);
-//    public static final int FILLED = 1;
-//    public static final int EMPTY = 0;
+    public static int WIDTH;
+    public static int HEIGHT;
+    public static Resources res;
 
     public CanvasFieldWidget(Canvas canvas) {
+        Resources.setPadding();
+        FIELD_WIDTH = Resources.WIDTH;
+        FIELD_HEIGHT = Resources.HEIGHT;
+        WIDTH = Resources.CELL_WIDTH;
+        HEIGHT = Resources.CELL_HEIGHT;
+
+        System.out.printf("%s %s %s %s \n", FIELD_WIDTH, FIELD_HEIGHT, WIDTH, HEIGHT);
         CanvasFieldWidget.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
 
-        cells = new CellWidget[FIELD_SIZE][FIELD_SIZE];
+        cells = new CellWidget[FIELD_WIDTH][FIELD_HEIGHT];
 
-        for(int i = 0; i < FIELD_SIZE; i++) {
-            for(int j = 0; j < FIELD_SIZE; j++) {
+        for(int i = 0; i < FIELD_WIDTH; i++) {
+            for(int j = 0; j < FIELD_HEIGHT; j++) {
                 cells[i][j] = new CanvasCellWidget(i * WIDTH, j * HEIGHT, canvas);
                 final int x = i * WIDTH;
                 final int y = j * HEIGHT;
@@ -46,10 +48,12 @@ public class CanvasFieldWidget implements FieldWidget {
         }
     }
 
+
+
     @Override
     public void setState(State state) {
-        for(int i = 0; i < FIELD_SIZE; i++) {
-            for (int j = 0; j < FIELD_SIZE; j++) {
+        for(int i = 0; i < FIELD_WIDTH; i++) {
+            for (int j = 0; j < FIELD_HEIGHT; j++) {
                 if (state == null) {
                     System.out.println("state is null: you probably uploaded a file with wrong field size!");
                 } else {
@@ -57,44 +61,6 @@ public class CanvasFieldWidget implements FieldWidget {
                 }
             }
         }
-    }
-
-
-    public static State getStateFrom(File file) throws IOException {
-
-        BufferedInputStream test = new BufferedInputStream(new FileInputStream(file.getPath()));
-        InputStreamReader reader = new InputStreamReader(test, StandardCharsets.UTF_8);
-
-        CellWidget.State[][] cellWidgetStates = new CellWidget.State[FIELD_WIDTH][FIELD_HEIGHT];
-        CellWidget.State[] currCellState = new CellWidget.State[FIELD_SIZE];
-
-        int cell;
-        int i = 0;
-        int j = 0;
-        while ((cell = reader.read()) != -1) {
-            char fileCell = (char) cell;
-
-            // символы новой строки и возврата каретки
-            if (fileCell == '\n' || fileCell == '\r') {
-                continue;
-            }
-            // 49 - еденица :)
-            if (fileCell == 49) {
-                currCellState[i] = CellWidget.State.FILLED;
-            } else {
-                currCellState[i] = CellWidget.State.EMPTY;
-            }
-            numbers.addElement(j, i, fileCell);
-            i++;
-            if (i == FIELD_WIDTH) {
-                i = 0;
-                cellWidgetStates[j] = Arrays.copyOf(currCellState, currCellState.length);
-                j++;
-            }
-        }
-        numbers.finishProcessing();
-        System.out.printf("%s, \n %s \n", numbers.getRowSequences(), numbers.getColumnSequences());
-        return new FieldWidget.State(cellWidgetStates);
     }
 
     @Override
