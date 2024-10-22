@@ -8,12 +8,16 @@ import com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.List;
+
+import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.FIELD_WIDTH;
 
 
 public class Resources {
 
-    public static int CELL_WIDTH;
-    public static int CELL_HEIGHT;
+    public static int CELL_WIDTH = 40;
+    public static int CELL_HEIGHT = 40;
+    public static int CELL_SIZE = 40;
     private File file;
     private static InputStreamReader reader;
     public static CanvasNumbers numbers;
@@ -21,22 +25,35 @@ public class Resources {
     private static CellWidget.State[] currCellState;
 
 
-    public static final int CANVAS_WIDTH = 750;
-    public static final int CANVAS_HEIGHT = 750;
+    public static int CANVAS_WIDTH;
+    public static int CANVAS_HEIGHT;
     public static int WIDTH;
     public static int HEIGHT;
     public static int PADDING;
+    public static FieldWidget.State state;
 
     public Resources(File file) {
         this.file = file;
         try {
             getSize();
             System.out.println(Arrays.deepToString(cellWidgetStates));
-            PADDING = countPadding();
+            state = getState();
+            setPadding();
+            //PADDING = countPadding();
+            getFieldSize();
         } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("PADDING " + PADDING);
+    }
+
+    private static void getFieldSize() {
+        CANVAS_HEIGHT = CELL_HEIGHT * HEIGHT + PADDING + 30;
+        CANVAS_WIDTH = CELL_WIDTH * WIDTH + PADDING + 30;
+//        CANVAS_HEIGHT = 500;
+//        CANVAS_WIDTH = 500;
+        System.out.println("idk " + CELL_HEIGHT);
+        System.out.println("idk2 " + CELL_WIDTH + " " + PADDING);
     }
 
     public void getSize() throws IOException {
@@ -59,6 +76,7 @@ public class Resources {
         reader = new InputStreamReader(bufferedInputStream, StandardCharsets.UTF_8);
 
         // CanvasNumbers с найденными размерами
+
         numbers = new CanvasNumbers(WIDTH, HEIGHT);
     }
 
@@ -114,10 +132,30 @@ public class Resources {
     }
 
     public static void setPadding() {
-        int PADDING = Resources.countPadding();
-        System.out.println("setPadding " + PADDING);
-        CELL_WIDTH = (CANVAS_WIDTH - PADDING ) / WIDTH;
-        CELL_HEIGHT = (CANVAS_HEIGHT - PADDING ) / HEIGHT;
+        PADDING = Resources.countPadding() * CELL_SIZE;
+//        PADDING = countPadding() * CELL_SIZE;
+//        System.out.println("setPadding " + PADDING);
+//        System.out.println("width " + " " + WIDTH + " " + CANVAS_WIDTH);
+//        System.out.println("height " + CANVAS_HEIGHT);
+//        CELL_WIDTH = (CANVAS_WIDTH - PADDING  ) / WIDTH;
+//        CELL_HEIGHT = (CANVAS_HEIGHT - PADDING ) / HEIGHT;
+    }
+//
+
+    public static int getMaxRowHints() {
+        int maxRowHints = 0;
+        for (List<Integer> rowSequence : numbers.getRowSequences()) {
+            maxRowHints = Math.max(maxRowHints, rowSequence.size());
+        }
+        return maxRowHints;
+    }
+
+    public static int getMaxColumnHints() {
+        int maxColumnHints = 0;
+        for (List<Integer> colSequence : numbers.getColumnSequences()) {
+            maxColumnHints = Math.max(maxColumnHints, colSequence.size());
+        }
+        return maxColumnHints;
     }
 
 }
