@@ -76,7 +76,9 @@ public class Resources {
         reader = new InputStreamReader(bufferedInputStream, StandardCharsets.UTF_8);
 
         // CanvasNumbers с найденными размерами
-
+        if (HEIGHT < 10 || WIDTH < 10) {
+            throw new IllegalStateException("Field is too small!");
+        }
         numbers = new CanvasNumbers(WIDTH, HEIGHT);
     }
 
