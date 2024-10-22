@@ -23,55 +23,42 @@ public class HelloApplication extends Application {
     public void start(Stage stage) {
 
         VBox vBox = new VBox();
-
-
-
-//                            state.CellWidget.State[i] = new CellWidget.State[] {CellWidget.State.EMPTY, CellWidget.State.EMPTY, CellWidget.State.EMPTY},
-//                        }
-//                new FieldWidget.State.Notification(0)
-        //System.out.println(Arrays.deepToString(cellWidgetState));
-
-
-
-
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Open File");
-            fileChooser.setInitialDirectory(new File("assets/crossword"));
-            File selectedFile = (fileChooser.showOpenDialog(stage));
-            if (selectedFile != null) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open File");
+        fileChooser.setInitialDirectory(new File("assets/crossword"));
+        File selectedFile = (fileChooser.showOpenDialog(stage));
+        if (selectedFile != null) {
 //                try {
-                    Resources res = new Resources(selectedFile);
-                    Canvas canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-                    vBox.getChildren().add(canvas);
-                    CellWidget.State[][] cellWidgetState = new CellWidget.State[res.WIDTH][res.HEIGHT];
-                    for (int i = 0; i < FIELD_WIDTH; i++) {
-                        for (int j = 0; j < FIELD_HEIGHT; j++) {
-                            cellWidgetState[i][j] = CellWidget.State.NULL;
-                        }
-                    }
-                    FieldWidget fieldWidget;
-                    FieldWidget.State state;
+            Resources res = new Resources(selectedFile);
+            Canvas canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+            vBox.getChildren().add(canvas);
+            CellWidget.State[][] cellWidgetState = new CellWidget.State[res.WIDTH][res.HEIGHT];
+            for (int i = 0; i < FIELD_WIDTH; i++) {
+                for (int j = 0; j < FIELD_HEIGHT; j++) {
+                    cellWidgetState[i][j] = CellWidget.State.NULL;
+                }
+            }
+            FieldWidget fieldWidget;
+            FieldWidget.State state;
 
-                    fieldWidget = new CanvasFieldWidget(canvas);
+            fieldWidget = new CanvasFieldWidget(canvas);
 
-                    //res.setCanvasFieldWidget(fieldWidget);
+            //res.setCanvasFieldWidget(fieldWidget);
 
-                    state = new FieldWidget.State(cellWidgetState);
-                    fieldWidget.setState(state);
+            state = new FieldWidget.State(cellWidgetState);
+            fieldWidget.setState(state);
 
-                    fieldWidget.setOnCellClickListener( (x, y) -> {
-                        System.out.println("Cell: " + x + ", " + y);
-                        state.cells()[x][y] = CellWidget.State.FILLED;
-                    });
+            fieldWidget.setOnCellClickListener((x, y) -> {
+                System.out.println("Cell: " + x + ", " + y);
+                state.cells()[x][y] = CellWidget.State.FILLED;
+            });
 
-                    fieldWidget.setFieldState(ACTIVE);
-                    fieldWidget.setState(res.state);
-                    fieldWidget.drawNums(canvas.getGraphicsContext2D());
+            fieldWidget.setFieldState(ACTIVE);
+            fieldWidget.setState(res.state);
+            fieldWidget.drawNums(canvas.getGraphicsContext2D());
 //                    new FieldWidget.State = INACTIVE;
 
-            }
-
-
+        }
         vBox.setAlignment(Pos.CENTER);
         Scene scene = new Scene(vBox);
         stage.setTitle("WIP");

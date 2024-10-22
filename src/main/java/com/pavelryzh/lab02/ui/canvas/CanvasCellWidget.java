@@ -3,6 +3,7 @@ package com.pavelryzh.lab02.ui.canvas;
 import com.pavelryzh.lab02.ui.CellWidget;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseButton;
 
 
 import static com.pavelryzh.lab02.Resources.PADDING;
@@ -21,13 +22,16 @@ public class CanvasCellWidget implements CellWidget {
         this.y = y + PADDING;
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
-//        canvas.setOnMouseClicked( e -> {
-//                    if (listener != null &&
-//                            e.getX() > x * WIDTH && e.getX() < (x + 1) * WIDTH &&
-//                            e.getY() > y * HEIGHT && e.getY() < (y + 1) * HEIGHT) {
-//                        listener.onClick();
-//                    }
-//        });
+        canvas.setOnMouseClicked( e -> {
+            if (listener != null &&
+                    e.getX() > x * WIDTH && e.getX() < (x + 1) * WIDTH &&
+                    e.getY() > y * HEIGHT && e.getY() < (y + 1) * HEIGHT) {
+
+                if (e.getButton() == MouseButton.PRIMARY) {
+                    listener.onClick();
+                }
+            }
+        });
     }
 
     @Override

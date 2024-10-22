@@ -52,8 +52,8 @@ public class Resources {
         CANVAS_WIDTH = CELL_WIDTH * WIDTH + PADDING + 30;
 //        CANVAS_HEIGHT = 500;
 //        CANVAS_WIDTH = 500;
-        System.out.println("idk " + CELL_HEIGHT);
-        System.out.println("idk2 " + CELL_WIDTH + " " + PADDING);
+//        System.out.println("idk " + CELL_HEIGHT);
+//        System.out.println("idk2 " + CELL_WIDTH + " " + PADDING);
     }
 
     public void getSize() throws IOException {
@@ -63,7 +63,7 @@ public class Resources {
         if (firstLine != null) {
             WIDTH = firstLine.replaceAll("[^01]", "").length();  // Считаем длину строки без пробелов и символов новой строки
         } else {
-            throw new IOException("Файл пустой");
+            throw new IOException("File is empty!");
         }
 
         HEIGHT = 1;  // Первая строка уже прочитана
@@ -76,7 +76,9 @@ public class Resources {
         reader = new InputStreamReader(bufferedInputStream, StandardCharsets.UTF_8);
 
         // CanvasNumbers с найденными размерами
-
+        if (HEIGHT < 10 || WIDTH < 10) {
+            throw new IllegalStateException("Field is too small!");
+        }
         numbers = new CanvasNumbers(WIDTH, HEIGHT);
     }
 
@@ -112,50 +114,48 @@ public class Resources {
         }
 
         numbers.finishProcessing();
-        System.out.printf("%s, \n %s \n", numbers.getRowSequences(), numbers.getColumnSequences());
+//        System.out.printf("%s, \n %s \n", numbers.getRowSequences(), numbers.getColumnSequences());
 //        System.out.println(countPadding());
-        System.out.printf("addit.: %s %s", Arrays.deepToString(cellWidgetStates), Arrays.deepToString(currCellState));
+//        System.out.printf("addit.: %s %s", Arrays.deepToString(cellWidgetStates), Arrays.deepToString(currCellState));
         return new FieldWidget.State(cellWidgetStates);
     }
 
-    public static int countPadding() {
+    public static void setPadding() {
         int maxNum = 0;
-        for (CellWidget.State[] stateArr: cellWidgetStates) {
+        for (CellWidget.State[] stateArr : cellWidgetStates) {
             int count = 0;
             for (CellWidget.State state : stateArr) {
-                if (state != CellWidget.State.EMPTY) {count++;}
-                else break;
+                if (state != CellWidget.State.EMPTY) {
+                    count++;
+                } else break;
             }
             maxNum = Math.max(maxNum, count);
         }
-        return maxNum;
+        PADDING = maxNum * CELL_SIZE;
     }
-
-    public static void setPadding() {
-        PADDING = Resources.countPadding() * CELL_SIZE;
 //        PADDING = countPadding() * CELL_SIZE;
 //        System.out.println("setPadding " + PADDING);
 //        System.out.println("width " + " " + WIDTH + " " + CANVAS_WIDTH);
 //        System.out.println("height " + CANVAS_HEIGHT);
 //        CELL_WIDTH = (CANVAS_WIDTH - PADDING  ) / WIDTH;
 //        CELL_HEIGHT = (CANVAS_HEIGHT - PADDING ) / HEIGHT;
-    }
+
 //
-
-    public static int getMaxRowHints() {
-        int maxRowHints = 0;
-        for (List<Integer> rowSequence : numbers.getRowSequences()) {
-            maxRowHints = Math.max(maxRowHints, rowSequence.size());
-        }
-        return maxRowHints;
-    }
-
-    public static int getMaxColumnHints() {
-        int maxColumnHints = 0;
-        for (List<Integer> colSequence : numbers.getColumnSequences()) {
-            maxColumnHints = Math.max(maxColumnHints, colSequence.size());
-        }
-        return maxColumnHints;
-    }
+//
+//    public static int getMaxRowHints() {
+//        int maxRowHints = 0;
+//        for (List<Integer> rowSequence : numbers.getRowSequences()) {
+//            maxRowHints = Math.max(maxRowHints, rowSequence.size());
+//        }
+//        return maxRowHints;
+//    }
+//
+//    public static int getMaxColumnHints() {
+//        int maxColumnHints = 0;
+//        for (List<Integer> colSequence : numbers.getColumnSequences()) {
+//            maxColumnHints = Math.max(maxColumnHints, colSequence.size());
+//        }
+//        return maxColumnHints;
+//    }
 
 }

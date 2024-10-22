@@ -32,7 +32,7 @@ public class CanvasFieldWidget implements FieldWidget {
         WIDTH = Resources.CELL_WIDTH;
         HEIGHT = Resources.CELL_HEIGHT;
 
-        System.out.printf("%s %s %s %s \n", FIELD_WIDTH, FIELD_HEIGHT, WIDTH, HEIGHT);
+        //System.out.printf("%s %s %s %s \n", FIELD_WIDTH, FIELD_HEIGHT, WIDTH, HEIGHT);
         CanvasFieldWidget.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
 
