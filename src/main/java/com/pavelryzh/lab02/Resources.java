@@ -49,7 +49,7 @@ public class Resources {
     }
 
     private static void getFieldSize() {
-        CELL_HEIGHT = (CANVAS_HEIGHT - PADDING) / HEIGHT ;
+        CELL_HEIGHT = (CANVAS_HEIGHT - PADDING) / HEIGHT;
         CELL_WIDTH = (CANVAS_WIDTH - PADDING) / WIDTH;
     }
 
@@ -128,7 +128,8 @@ public class Resources {
             }
             maxNum = Math.max(maxNum, count);
         }
-        PADDING = maxNum * CELL_WIDTH;
+        PADDING = (int) ((int) Math.pow(maxNum, 1.2) * Math.min( Math.pow(CANVAS_HEIGHT, 1.04) / Math.pow(HEIGHT, 1.18), HEIGHT * Math.pow(maxNum, 2)));
+//        System.out.println("PADDING: " + Math.pow(maxNum, 1.2) + " " +  (CANVAS_HEIGHT) / Math.pow(HEIGHT, 1.2) + " "  + HEIGHT * Math.pow(maxNum, 2));
     }
 //        PADDING = countPadding() * CELL_SIZE;
 //        System.out.println("setPadding " + PADDING);
