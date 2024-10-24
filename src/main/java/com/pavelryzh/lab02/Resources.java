@@ -4,6 +4,8 @@ import com.pavelryzh.lab02.ui.CellWidget;
 import com.pavelryzh.lab02.ui.FieldWidget;
 import com.pavelryzh.lab02.ui.canvas.CanvasNumbers;
 import com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.*;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -15,18 +17,17 @@ import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.FIELD_WIDTH;
 
 public class Resources {
 
-    public static int CELL_WIDTH = 40;
-    public static int CELL_HEIGHT = 40;
-    public static int CELL_SIZE = 40;
+    public static int CELL_WIDTH;
+    public static int CELL_HEIGHT;
     private File file;
     private static InputStreamReader reader;
     public static CanvasNumbers numbers;
     private static CellWidget.State[][] cellWidgetStates;
     private static CellWidget.State[] currCellState;
 
-
-    public static int CANVAS_WIDTH;
-    public static int CANVAS_HEIGHT;
+    public static int maxCanvasSize = (int) Math.min(Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight());
+    public static int CANVAS_WIDTH = maxCanvasSize - maxCanvasSize / 8;
+    public static int CANVAS_HEIGHT = maxCanvasSize - maxCanvasSize / 8;
     public static int WIDTH;
     public static int HEIGHT;
     public static int PADDING;
@@ -36,7 +37,7 @@ public class Resources {
         this.file = file;
         try {
             getSize();
-            System.out.println(Arrays.deepToString(cellWidgetStates));
+//            System.out.println(Arrays.deepToString(cellWidgetStates));
             state = getState();
             setPadding();
             //PADDING = countPadding();
@@ -44,16 +45,12 @@ public class Resources {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("PADDING " + PADDING);
+//        System.out.println("PADDING " + PADDING);
     }
 
     private static void getFieldSize() {
-        CANVAS_HEIGHT = CELL_HEIGHT * HEIGHT + PADDING + 30;
-        CANVAS_WIDTH = CELL_WIDTH * WIDTH + PADDING + 30;
-//        CANVAS_HEIGHT = 500;
-//        CANVAS_WIDTH = 500;
-//        System.out.println("idk " + CELL_HEIGHT);
-//        System.out.println("idk2 " + CELL_WIDTH + " " + PADDING);
+        CELL_HEIGHT = (CANVAS_HEIGHT - PADDING) / HEIGHT ;
+        CELL_WIDTH = (CANVAS_WIDTH - PADDING) / WIDTH;
     }
 
     public void getSize() throws IOException {
@@ -131,7 +128,7 @@ public class Resources {
             }
             maxNum = Math.max(maxNum, count);
         }
-        PADDING = maxNum * CELL_SIZE;
+        PADDING = maxNum * CELL_WIDTH;
     }
 //        PADDING = countPadding() * CELL_SIZE;
 //        System.out.println("setPadding " + PADDING);

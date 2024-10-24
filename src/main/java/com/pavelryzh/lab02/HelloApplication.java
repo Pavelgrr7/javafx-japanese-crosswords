@@ -6,10 +6,12 @@ import com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget;
 import javafx.application.Application;
 
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -58,10 +60,11 @@ public class HelloApplication extends Application {
             fieldWidget.drawNums(canvas.getGraphicsContext2D());
 //                    new FieldWidget.State = INACTIVE;
 
-        }
+        } else System.exit(1);
         vBox.setAlignment(Pos.CENTER);
         Scene scene = new Scene(vBox);
         stage.setTitle("WIP");
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }

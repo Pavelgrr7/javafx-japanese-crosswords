@@ -10,14 +10,13 @@ import java.util.List;
 
 import static com.pavelryzh.lab02.Resources.*;
 import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.FIELD_WIDTH;
+import static java.lang.Math.sqrt;
 //import com.pavelryzh.lab02.Resources.WIDTH;
 
 public class CanvasNumbers {
 
     private static int MAXROWNUMS = 0;
     private static int MAXCOLNUMS = 0;
-    private static final int XPADDING = CELL_WIDTH / 4;
-    private static final int YPADDING = CELL_HEIGHT / 4;
     private final List<List<Integer>> rowSequences;
     private final List<List<Integer>> columnSequences;
     private final int[] currentRowCounts;
@@ -93,16 +92,17 @@ public class CanvasNumbers {
     }
 
     public void drawNumbers(GraphicsContext gc) {
+        int XPADDING = CELL_WIDTH / 2;
+        int YPADDING = CELL_HEIGHT / 2;
+        int max = Math.max(MAXROWNUMS, MAXCOLNUMS);
+        gc.setFont(new Font("Consolas", Math.pow(max, 1.3)));
 
-        gc.setFont(new Font("Consolas", 9));
-
-        int numSize = (PADDING +  Math.max(MAXROWNUMS, MAXCOLNUMS)) / Math.max(MAXROWNUMS, MAXCOLNUMS);
-//        System.out.println("maxes: " + MAXCOLNUMS + " " + MAXROWNUMS);
+        int numSize = (int) ((PADDING * 1.2 +  max) / max);
 //        System.out.println("arrays: " + columnSequences + "\n" + rowSequences);
 //        System.out.println("Padding + numsize " + PADDING + " " + numSize);
         int count = 0;
 
-        for (int i = PADDING; i + XPADDING < CANVAS_WIDTH - CELL_WIDTH; i += CELL_WIDTH) {
+        for (int i = PADDING; i + XPADDING < CANVAS_WIDTH; i += CELL_WIDTH) {
             while (columnSequences.get(count).size() < MAXCOLNUMS) {
                 columnSequences.get(count).add(0);
             }
@@ -112,7 +112,7 @@ public class CanvasNumbers {
 //            System.out.println(XPADDING + " " + YPADDING);
             int k = 0;
             for (int j = YPADDING; j < PADDING; j += numSize) {
-//                System.out.println(j + " and " + i);
+                System.out.println(j + " and " + i);
                 if (columnSequences.get(count).get(k) == 0) gc.fillText(" ", i + XPADDING, j);
                 else gc.fillText(String.valueOf(columnSequences.get(count).get(k)), i + XPADDING, j);
                 if (rowSequences.get(count).get(k) == 0) gc.fillText(" ", j, i + XPADDING);
