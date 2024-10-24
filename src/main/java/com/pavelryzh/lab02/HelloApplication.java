@@ -6,12 +6,10 @@ import com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget;
 import javafx.application.Application;
 
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -30,7 +28,6 @@ public class HelloApplication extends Application {
         fileChooser.setInitialDirectory(new File("assets/crossword"));
         File selectedFile = (fileChooser.showOpenDialog(stage));
         if (selectedFile != null) {
-//                try {
             Resources res = new Resources(selectedFile);
             Canvas canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
             vBox.getChildren().add(canvas);
@@ -45,21 +42,18 @@ public class HelloApplication extends Application {
 
             fieldWidget = new CanvasFieldWidget(canvas);
 
-            //res.setCanvasFieldWidget(fieldWidget);
-
             state = new FieldWidget.State(cellWidgetState);
             fieldWidget.setState(state);
 
             fieldWidget.setOnCellClickListener((x, y) -> {
-                System.out.println("Cell: " + x + ", " + y);
-                state.cells()[x][y] = CellWidget.State.FILLED;
+                System.out.println("Клик по клетке на координатах: " + x + ", " + y);
+                // Дополнительная логика
             });
+
 
             fieldWidget.setFieldState(ACTIVE);
             fieldWidget.setState(res.state);
             fieldWidget.drawNums(canvas.getGraphicsContext2D());
-//                    new FieldWidget.State = INACTIVE;
-
         } else System.exit(1);
         vBox.setAlignment(Pos.CENTER);
         Scene scene = new Scene(vBox);

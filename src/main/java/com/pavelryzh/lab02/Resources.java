@@ -3,16 +3,16 @@ package com.pavelryzh.lab02;
 import com.pavelryzh.lab02.ui.CellWidget;
 import com.pavelryzh.lab02.ui.FieldWidget;
 import com.pavelryzh.lab02.ui.canvas.CanvasNumbers;
-import com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.*;
-import javafx.geometry.Rectangle2D;
+//import com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.*;
+//import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.List;
+//import java.util.List;
 
-import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.FIELD_WIDTH;
+//import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.FIELD_WIDTH;
 
 
 public class Resources {

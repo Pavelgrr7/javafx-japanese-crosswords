@@ -1,6 +1,5 @@
 package com.pavelryzh.lab02.ui.canvas;
 
-import com.pavelryzh.lab02.Resources;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
 
@@ -10,8 +9,6 @@ import java.util.List;
 
 import static com.pavelryzh.lab02.Resources.*;
 import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.FIELD_WIDTH;
-import static java.lang.Math.sqrt;
-//import com.pavelryzh.lab02.Resources.WIDTH;
 
 public class CanvasNumbers {
 

@@ -6,8 +6,6 @@ import com.pavelryzh.lab02.ui.FieldWidget;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
-import java.io.*;
-import java.util.Arrays;
 
 import static com.pavelryzh.lab02.Resources.numbers;
 
@@ -41,11 +39,22 @@ public class CanvasFieldWidget implements FieldWidget {
         for(int i = 0; i < FIELD_WIDTH; i++) {
             for(int j = 0; j < FIELD_HEIGHT; j++) {
                 cells[i][j] = new CanvasCellWidget(i * WIDTH, j * HEIGHT, canvas);
-                final int x = i * WIDTH;
-                final int y = j * HEIGHT;
-                cells[i][j].setOnClickListener(() -> listener.onClick(x, y));
+                //cells[i][j].setOnClickListener((t,l) -> listener.onClick(cellX, cellY));
             }
         }
+        canvas.setOnMouseClicked(event -> {
+            double mouseX = event.getX();
+            double mouseY = event.getY();
+
+            int cellX = (int) (mouseX);
+            int cellY = (int) (mouseY);
+
+            //if (cellX >= 0 && cellX < FIELD_WIDTH && cellY >= 0 && cellY < FIELD_HEIGHT) {
+                if (listener != null) {
+                    listener.onClick(cellX, cellY);
+                }
+            //}
+        });
     }
 
 

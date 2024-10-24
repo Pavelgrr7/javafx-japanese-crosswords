@@ -1,5 +1,6 @@
 package com.pavelryzh.lab02.ui.canvas;
 
+import com.pavelryzh.lab02.Resources;
 import com.pavelryzh.lab02.ui.CellWidget;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -22,16 +23,30 @@ public class CanvasCellWidget implements CellWidget {
         this.y = y + PADDING;
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
-        canvas.setOnMouseClicked( e -> {
-            if (listener != null &&
-                    e.getX() > x * WIDTH && e.getX() < (x + 1) * WIDTH &&
-                    e.getY() > y * HEIGHT && e.getY() < (y + 1) * HEIGHT) {
+        canvas.setOnMouseClicked(event -> {
+            double mouseX = event.getX();
+            double mouseY = event.getY();
 
-                if (e.getButton() == MouseButton.PRIMARY) {
-                    listener.onClick();
-                }
+            int cellX = (int) (mouseX);
+            int cellY = (int) (mouseY);
+
+            // Проверяем, что клик произошел внутри поля
+            if (listener != null && cellX >= 0 && cellX < FIELD_WIDTH && cellY >= 0 && cellY < FIELD_HEIGHT) {
+                listener.onClick(cellX, cellY);
+                System.out.println("Клик по клетке на координатах: " + cellX + ", " + cellY);
             }
         });
+
+//        canvas.setOnMouseClicked( e -> {
+//            if (listener != null &&
+//                    e.getX() > x * WIDTH && e.getX() < (x + 1) * WIDTH &&
+//                    e.getY() > y * HEIGHT && e.getY() < (y + 1) * HEIGHT) {
+//
+//                if (e.getButton() == MouseButton.PRIMARY) {
+//                    listener.onClick();
+//                }
+//            }
+//        });
     }
 
     @Override

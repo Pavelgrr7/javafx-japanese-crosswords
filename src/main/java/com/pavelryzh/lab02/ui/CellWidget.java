@@ -6,7 +6,9 @@ public interface CellWidget {
     void setState(State state);
 
     interface OnClickListener {
-        void onClick();
+        //void onClick();
+
+        void onClick(int cellX, int cellY);
     }
 
     enum State {
