@@ -1,5 +1,6 @@
 package com.pavelryzh.lab02;
 
+import com.pavelryzh.lab02.cipher.Encoder;
 import com.pavelryzh.lab02.ui.CellWidget;
 import com.pavelryzh.lab02.ui.FieldWidget;
 import com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget;
@@ -20,7 +21,7 @@ import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.*;
 public class HelloApplication extends Application {
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws IOException {
 
         VBox vBox = new VBox();
         FileChooser fileChooser = new FileChooser();
@@ -28,7 +29,11 @@ public class HelloApplication extends Application {
         fileChooser.setInitialDirectory(new File("assets/crossword"));
         File selectedFile = (fileChooser.showOpenDialog(stage));
         if (selectedFile != null) {
-            Resources res = new Resources(selectedFile);
+            Encoder ec = new Encoder(selectedFile);
+//            ec.encodeFile();
+            String fileContent = ec.decodeFile();
+
+            Resources res = new Resources(fileContent);
             Canvas canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
             vBox.getChildren().add(canvas);
             CellWidget.State[][] cellWidgetState = new CellWidget.State[res.WIDTH][res.HEIGHT];
@@ -54,6 +59,7 @@ public class HelloApplication extends Application {
             fieldWidget.setFieldState(ACTIVE);
             fieldWidget.setState(res.state);
             fieldWidget.drawNums(canvas.getGraphicsContext2D());
+
         } else System.exit(1);
         vBox.setAlignment(Pos.CENTER);
         Scene scene = new Scene(vBox);

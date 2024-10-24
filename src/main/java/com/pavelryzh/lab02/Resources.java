@@ -19,7 +19,8 @@ public class Resources {
 
     public static int CELL_WIDTH;
     public static int CELL_HEIGHT;
-    private File file;
+    private String str;
+//    private File file;
     private static InputStreamReader reader;
     public static CanvasNumbers numbers;
     private static CellWidget.State[][] cellWidgetStates;
@@ -33,19 +34,16 @@ public class Resources {
     public static int PADDING;
     public static FieldWidget.State state;
 
-    public Resources(File file) {
-        this.file = file;
+    public Resources(String str) {
+        this.str = str;
         try {
             getSize();
-//            System.out.println(Arrays.deepToString(cellWidgetStates));
             state = getState();
             setPadding();
-            //PADDING = countPadding();
             getFieldSize();
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        System.out.println("PADDING " + PADDING);
     }
 
     private static void getFieldSize() {
@@ -54,32 +52,33 @@ public class Resources {
     }
 
     public void getSize() throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
-        String firstLine = bufferedReader.readLine();  // Читаем первую строку
+        BufferedReader bufferedReader = new BufferedReader(new StringReader(str));
+
+        String firstLine = bufferedReader.readLine();
         if (firstLine != null) {
-            WIDTH = firstLine.replaceAll("[^01]", "").length();  // Считаем длину строки без пробелов и символов новой строки
+            WIDTH = firstLine.replaceAll("[^01]", "").length();
         } else {
-            throw new IOException("File is empty!");
+            throw new IOException("Input string is empty!");
         }
 
-        HEIGHT = 1;  // Первая строка уже прочитана
+        HEIGHT = 1;
         while (bufferedReader.readLine() != null) {
             HEIGHT++;
         }
         bufferedReader.close();
 
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file.getPath()));
+
+        InputStream bufferedInputStream = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));
         reader = new InputStreamReader(bufferedInputStream, StandardCharsets.UTF_8);
 
-        // CanvasNumbers с найденными размерами
+        // minimal field size: 10
         if (HEIGHT < 10 || WIDTH < 10) {
             throw new IllegalStateException("Field is too small!");
         }
         numbers = new CanvasNumbers(WIDTH, HEIGHT);
     }
 
-    // Метод для получения состояния матрицы
     public static FieldWidget.State getState() throws IOException {
 
         cellWidgetStates = new CellWidget.State[WIDTH][HEIGHT];
