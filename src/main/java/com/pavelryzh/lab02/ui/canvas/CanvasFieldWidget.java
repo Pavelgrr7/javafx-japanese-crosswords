@@ -6,8 +6,7 @@ import com.pavelryzh.lab02.ui.FieldWidget;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
-
-import static com.pavelryzh.lab02.Resources.numbers;
+import static com.pavelryzh.lab02.Resources.*;
 
 public class CanvasFieldWidget implements FieldWidget {
 
@@ -51,9 +50,12 @@ public class CanvasFieldWidget implements FieldWidget {
 
             //if (cellX >= 0 && cellX < FIELD_WIDTH && cellY >= 0 && cellY < FIELD_HEIGHT) {
                 if (listener != null) {
+                if (cellX > PADDING && cellY > PADDING) {
                     listener.onClick(cellX, cellY);
+                    System.out.println("Клик по клетке на координатах2: " + (cellX - PADDING) / CELL_WIDTH + ", " + (cellY - PADDING) / CELL_HEIGHT);
                 }
-            //}
+
+            } else System.out.println("listener is null.");
         });
     }
 

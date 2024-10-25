@@ -19,8 +19,7 @@ public class Resources {
 
     public static int CELL_WIDTH;
     public static int CELL_HEIGHT;
-    private String str;
-//    private File file;
+    private final String str;
     private static InputStreamReader reader;
     public static CanvasNumbers numbers;
     private static CellWidget.State[][] cellWidgetStates;
@@ -67,7 +66,6 @@ public class Resources {
             HEIGHT++;
         }
         bufferedReader.close();
-
 
         InputStream bufferedInputStream = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));
         reader = new InputStreamReader(bufferedInputStream, StandardCharsets.UTF_8);

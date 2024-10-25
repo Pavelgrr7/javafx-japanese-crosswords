@@ -50,10 +50,7 @@ public class HelloApplication extends Application {
             state = new FieldWidget.State(cellWidgetState);
             fieldWidget.setState(state);
 
-            fieldWidget.setOnCellClickListener((x, y) -> {
-                System.out.println("Клик по клетке на координатах: " + x + ", " + y);
-                // Дополнительная логика
-            });
+            fieldWidget.setOnCellClickListener((x, y) -> {});
 
 
             fieldWidget.setFieldState(ACTIVE);

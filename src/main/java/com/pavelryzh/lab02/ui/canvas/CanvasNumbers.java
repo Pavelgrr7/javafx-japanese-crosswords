@@ -96,8 +96,6 @@ public class CanvasNumbers {
         System.out.println(Math.pow(max, 1.3));
 
         int numSize = (int) ((PADDING * 1.2 +  max) / max);
-//        System.out.println("arrays: " + columnSequences + "\n" + rowSequences);
-//        System.out.println("Padding + numsize " + PADDING + " " + numSize);
         int count = 0;
 
         for (int i = PADDING; i + XPADDING < CANVAS_WIDTH; i += CELL_WIDTH) {
@@ -107,14 +105,15 @@ public class CanvasNumbers {
             while (rowSequences.get(count).size() < MAXROWNUMS) {
                 rowSequences.get(count).add(0);
             }
-//            System.out.println(XPADDING + " " + YPADDING);
             int k = 0;
             for (int j = YPADDING; j < PADDING; j += numSize) {
 //                System.out.println(j + " and " + i);
                 if (columnSequences.get(count).get(k) == 0) gc.fillText(" ", i + XPADDING, j);
                 else gc.fillText(String.valueOf(columnSequences.get(count).get(k)), i + XPADDING, j);
+
                 if (rowSequences.get(count).get(k) == 0) gc.fillText(" ", j, i + XPADDING);
                 else gc.fillText(String.valueOf(rowSequences.get(count).get(k)), j, i + XPADDING);
+
                 k++;
             }
             if (count < FIELD_WIDTH - 1) count++;
