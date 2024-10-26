@@ -9,11 +9,13 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.util.Arrays;
 
 import static com.pavelryzh.lab02.Resources.*;
 import static com.pavelryzh.lab02.ui.FieldWidget.FieldState.*;
@@ -29,10 +31,12 @@ public class HelloApplication extends Application {
         fileChooser.setInitialDirectory(new File("assets/crossword"));
         File selectedFile = (fileChooser.showOpenDialog(stage));
         if (selectedFile != null) {
+            //использую encoder для расшифровки файла
             Encoder ec = new Encoder(selectedFile);
 //            ec.encodeFile();
             String fileContent = ec.decodeFile();
 
+            //передаю строку с полем в ресурсы для расчёта необходимых констант
             Resources res = new Resources(fileContent);
             Canvas canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
             vBox.getChildren().add(canvas);
@@ -47,15 +51,36 @@ public class HelloApplication extends Application {
 
             fieldWidget = new CanvasFieldWidget(canvas);
 
+            //получаю матрицу с полем
+            cellWidgetState = (res.state).cells();
             state = new FieldWidget.State(cellWidgetState);
-            fieldWidget.setState(state);
-
-            fieldWidget.setOnCellClickListener((x, y) -> {});
-
 
             fieldWidget.setFieldState(ACTIVE);
-            fieldWidget.setState(res.state);
+            fieldWidget.setState(state);
+            //отрисовываю числа-подсказки
             fieldWidget.drawNums(canvas.getGraphicsContext2D());
+
+            //вешаю слушатель на поле
+            fieldWidget.setOnCellClickListener(new OnCellClickListener() {
+                @Override
+                public void onClick(int x, int y, MouseButton button) {
+                    System.out.println("Clicked: " + x + ", " + y);
+                    if (button == MouseButton.PRIMARY ) {
+                        System.out.println(state.cells()[y][x]);
+                        switch(state.cells()[y][x]) {
+                            case CellWidget.State.FILLED -> state.cells()[y][x] = CellWidget.State.EMPTY;
+                            case CellWidget.State.EMPTY -> state.cells()[y][x] = CellWidget.State.FILLED;
+                        }
+                    } else {
+                        switch(state.cells()[y][x]) {
+                            case CellWidget.State.EMPTY -> state.cells()[y][x] = CellWidget.State.POINT;
+                            case CellWidget.State.POINT -> state.cells()[y][x] = CellWidget.State.EMPTY;
+                        }
+
+                    }
+                    fieldWidget.setState(state);
+                }
+            });
 
         } else System.exit(1);
         vBox.setAlignment(Pos.CENTER);

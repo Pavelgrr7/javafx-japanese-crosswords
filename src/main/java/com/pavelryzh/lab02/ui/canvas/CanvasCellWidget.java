@@ -76,9 +76,14 @@ public class CanvasCellWidget implements CellWidget {
                 case NULL:
                     clear();
                     break;
+                case POINT:
+                    drawEmpty();
+                    drawPoint();
+                    break;
                 default:
                     clear();
                     System.err.println("Unknown state: " + state);
+                    break;
             }
         }
     }
@@ -88,10 +93,15 @@ public class CanvasCellWidget implements CellWidget {
     }
 
     void drawEmpty() {
+        gc.clearRect(x, y, CELL_WIDTH, CELL_HEIGHT);
         gc.strokeRect(x, y, CELL_WIDTH, CELL_HEIGHT);
     }
 
+    void drawPoint() {
+        gc.strokeOval(x + (double) CELL_WIDTH /4, y + (double) CELL_HEIGHT /4, CELL_WIDTH /2, CELL_HEIGHT /2);
+    }
     void drawFilled() {
+        gc.clearRect(x, y, CELL_WIDTH, CELL_HEIGHT);
         gc.fillRect(x, y, CELL_WIDTH, CELL_HEIGHT);
     }
 
