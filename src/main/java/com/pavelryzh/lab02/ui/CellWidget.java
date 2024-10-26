@@ -5,6 +5,8 @@ public interface CellWidget {
 
     void setState(State state);
 
+    void updateState(State state);
+
     interface OnClickListener {
         //void onClick();
 
@@ -14,6 +16,6 @@ public interface CellWidget {
     enum State {
         EMPTY,
         FILLED,
-        NULL
+        POINT, NULL
     }
 }

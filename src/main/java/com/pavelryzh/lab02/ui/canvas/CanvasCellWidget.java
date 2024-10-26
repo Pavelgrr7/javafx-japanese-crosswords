@@ -4,13 +4,10 @@ package com.pavelryzh.lab02.ui.canvas;
 import com.pavelryzh.lab02.ui.CellWidget;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseButton;
 
 
 import static com.pavelryzh.lab02.Resources.*;
 import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.*;
-import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.HEIGHT;
-import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.WIDTH;
 
 public class CanvasCellWidget implements CellWidget {
 
@@ -66,6 +63,15 @@ public class CanvasCellWidget implements CellWidget {
 
         if (CanvasFieldWidget.fieldState == FieldState.ACTIVE) {
             drawField();
+            drawEmpty();
+        }
+    }
+
+    @Override
+    public void updateState(State state) {
+
+        if (CanvasFieldWidget.fieldState == FieldState.ACTIVE) {
+            drawField();
             switch (state) {
                 case EMPTY:
                     drawEmpty();
@@ -76,9 +82,14 @@ public class CanvasCellWidget implements CellWidget {
                 case NULL:
                     clear();
                     break;
+                case POINT:
+                    drawEmpty();
+                    drawPoint();
+                    break;
                 default:
                     clear();
                     System.err.println("Unknown state: " + state);
+                    break;
             }
         }
     }
@@ -88,10 +99,15 @@ public class CanvasCellWidget implements CellWidget {
     }
 
     void drawEmpty() {
+        gc.clearRect(x, y, CELL_WIDTH, CELL_HEIGHT);
         gc.strokeRect(x, y, CELL_WIDTH, CELL_HEIGHT);
     }
 
+    void drawPoint() {
+        gc.strokeOval(x + (double) CELL_WIDTH /4, y + (double) CELL_HEIGHT /4, CELL_WIDTH /2, CELL_HEIGHT /2);
+    }
     void drawFilled() {
+        gc.clearRect(x, y, CELL_WIDTH, CELL_HEIGHT);
         gc.fillRect(x, y, CELL_WIDTH, CELL_HEIGHT);
     }
 

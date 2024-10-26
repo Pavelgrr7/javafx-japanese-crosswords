@@ -1,5 +1,6 @@
 package com.pavelryzh.lab02.ui;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseButton;
 
 public interface FieldWidget {
 
@@ -7,8 +8,10 @@ public interface FieldWidget {
     void setFieldState(FieldState fieldState);
     void setOnCellClickListener(OnCellClickListener listener);
 
+    void updateState(State state, int i, int j);
+
     interface OnCellClickListener {
-        void onClick(int x, int y);
+        void onClick(int x, int y, MouseButton button);
     }
 
     enum FieldState{

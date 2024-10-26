@@ -5,6 +5,7 @@ import com.pavelryzh.lab02.ui.CellWidget;
 import com.pavelryzh.lab02.ui.FieldWidget;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseButton;
 
 import static com.pavelryzh.lab02.Resources.*;
 
@@ -45,15 +46,14 @@ public class CanvasFieldWidget implements FieldWidget {
             double mouseX = event.getX();
             double mouseY = event.getY();
 
-            int cellX = (int) (mouseX);
-            int cellY = (int) (mouseY);
+            int cellX = (int) (mouseX) - PADDING;
+            int cellY = (int) (mouseY) - PADDING;
 
             //if (cellX >= 0 && cellX < FIELD_WIDTH && cellY >= 0 && cellY < FIELD_HEIGHT) {
                 if (listener != null) {
-                if (cellX > PADDING && cellY > PADDING) {
-                    listener.onClick(cellX, cellY);
-                    System.out.println("Клик по клетке на координатах2: " + (cellX - PADDING) / CELL_WIDTH + ", " + (cellY - PADDING) / CELL_HEIGHT);
-                }
+                //if (cellX >  && cellY > PADDING) {
+                    listener.onClick(cellX / CELL_WIDTH, cellY / CELL_HEIGHT, event.getButton());
+                //}
 
             } else System.out.println("listener is null.");
         });
@@ -82,6 +82,11 @@ public class CanvasFieldWidget implements FieldWidget {
     @Override
     public void setOnCellClickListener(OnCellClickListener listener) {
         this.listener = listener;
+    }
+
+    @Override
+    public void updateState(State state, int i, int j) {
+        cells[i][j].updateState(state.cells()[j][i]);
     }
 
     public void drawNums(GraphicsContext gc) {
