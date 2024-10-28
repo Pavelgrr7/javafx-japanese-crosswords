@@ -7,7 +7,8 @@ public interface FieldWidget {
     void setState(State state);
     void setFieldState(FieldState fieldState);
     void setOnCellClickListener(OnCellClickListener listener);
-
+    FieldState getFieldState();
+    CellWidget[][] getCells();
     void updateState(State state, int i, int j);
 
     interface OnCellClickListener {
@@ -22,9 +23,8 @@ public interface FieldWidget {
 
     record State(
             CellWidget.State[][] cells
-    ) {
-        public record Notification(int code) {
-        }
+    ){
+
     }
 
     void drawNums(GraphicsContext gc);

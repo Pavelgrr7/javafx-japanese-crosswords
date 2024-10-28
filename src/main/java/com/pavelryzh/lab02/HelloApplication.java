@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Alert;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -62,23 +63,36 @@ public class HelloApplication extends Application {
 
             //вешаю слушатель на поле
             fieldWidget.setOnCellClickListener(new OnCellClickListener() {
+                EndObserver gameEndObserver = new GameEndObserver(fieldWidget, state.cells());
+
                 @Override
                 public void onClick(int x, int y, MouseButton button) {
-                    System.out.println("Clicked: " + x + ", " + y);
+                    //System.out.println("Clicked: " + x + ", " + y);
+                    if (fieldWidget.getFieldState() == WIN) return;
                     if (button == MouseButton.PRIMARY ) {
                         System.out.println(state.cells()[y][x]);
+
                         switch(state.cells()[y][x]) {
-                            case CellWidget.State.FILLED -> state.cells()[y][x] = CellWidget.State.EMPTY;
-                            case CellWidget.State.EMPTY -> state.cells()[y][x] = CellWidget.State.FILLED;
+                            case CellWidget.State.FILLED -> state.cells()[y][x] = CellWidget.State.OPEN_RIGHT;
+                            case CellWidget.State.EMPTY -> state.cells()[y][x] = CellWidget.State.OPEN_WRONG;
+                            case CellWidget.State.OPEN_RIGHT ->
+                                state.cells()[y][x] = CellWidget.State.FILLED;
+                                //countRight++;
+
+                            case CellWidget.State.OPEN_WRONG -> state.cells()[y][x] = CellWidget.State.EMPTY;
                         }
+                        gameEndObserver.cellStateChanged(state.cells()[y][x]);
                     } else {
-                        switch(state.cells()[y][x]) {
-                            case CellWidget.State.EMPTY -> state.cells()[y][x] = CellWidget.State.POINT;
+                        switch (state.cells()[y][x]) {
+                            case CellWidget.State.EMPTY, CellWidget.State.FILLED ->
+                                    state.cells()[y][x] = CellWidget.State.POINT;
                             case CellWidget.State.POINT -> state.cells()[y][x] = CellWidget.State.EMPTY;
                         }
-
                     }
+//                    if (count == 5)
+//                        gameEndObserver.victoryNotification();
                     fieldWidget.updateState(state, x, y);
+//                    count++;
                 }
             });
 

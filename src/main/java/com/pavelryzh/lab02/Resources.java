@@ -32,6 +32,7 @@ public class Resources {
     public static int HEIGHT;
     public static int PADDING;
     public static FieldWidget.State state;
+    public static int countFilled;
 
     public Resources(String str) {
         this.str = str;
@@ -94,6 +95,7 @@ public class Resources {
             }
             // 49 - еденица :)
             if (fileCell == 49) {
+                countFilled++;
                 currCellState[i] = CellWidget.State.FILLED;
             } else {
                 currCellState[i] = CellWidget.State.EMPTY;

@@ -60,7 +60,6 @@ public class CanvasCellWidget implements CellWidget {
 
     @Override
     public void setState(State state) {
-
         if (CanvasFieldWidget.fieldState == FieldState.ACTIVE) {
             drawField();
             drawEmpty();
@@ -73,10 +72,10 @@ public class CanvasCellWidget implements CellWidget {
         if (CanvasFieldWidget.fieldState == FieldState.ACTIVE) {
             drawField();
             switch (state) {
-                case EMPTY:
+                case EMPTY, FILLED:
                     drawEmpty();
                     break;
-                case FILLED:
+                case OPEN_RIGHT, OPEN_WRONG:
                     drawFilled();
                     break;
                 case NULL:
@@ -95,24 +94,29 @@ public class CanvasCellWidget implements CellWidget {
     }
 
     private void clear() {
+
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     void drawEmpty() {
-        gc.clearRect(x, y, CELL_WIDTH, CELL_HEIGHT);
+        gc.stroke();
+        gc.clearRect(x, y, CELL_WIDTH + 1, CELL_HEIGHT + 1);
         gc.strokeRect(x, y, CELL_WIDTH, CELL_HEIGHT);
     }
 
     void drawPoint() {
+        gc.stroke();
         gc.strokeOval(x + (double) CELL_WIDTH /4, y + (double) CELL_HEIGHT /4, CELL_WIDTH /2, CELL_HEIGHT /2);
     }
     void drawFilled() {
-        gc.clearRect(x, y, CELL_WIDTH, CELL_HEIGHT);
-        gc.fillRect(x, y, CELL_WIDTH, CELL_HEIGHT);
+        gc.stroke();
+        gc.clearRect(x, y, CELL_WIDTH + 1, CELL_HEIGHT + 1);
+        gc.fillRect(x, y, CELL_WIDTH -1 , CELL_HEIGHT - 1);
     }
 
     void drawField(){
         gc.strokeLine(PADDING,0, PADDING, canvas.getWidth());
         gc.strokeLine(0, PADDING, canvas.getHeight(), PADDING);
+        gc.stroke();
     }
 }

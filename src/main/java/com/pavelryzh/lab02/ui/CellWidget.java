@@ -16,6 +16,6 @@ public interface CellWidget {
     enum State {
         EMPTY,
         FILLED,
-        POINT, NULL
+        POINT, OPEN_WRONG, OPEN_RIGHT, NULL
     }
 }

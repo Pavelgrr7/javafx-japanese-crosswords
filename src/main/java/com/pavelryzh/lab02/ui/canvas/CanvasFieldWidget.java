@@ -85,6 +85,11 @@ public class CanvasFieldWidget implements FieldWidget {
     }
 
     @Override
+    public FieldState getFieldState() {
+        return CanvasFieldWidget.fieldState;
+    }
+
+    @Override
     public void updateState(State state, int i, int j) {
         cells[i][j].updateState(state.cells()[j][i]);
     }
@@ -93,4 +98,8 @@ public class CanvasFieldWidget implements FieldWidget {
         numbers.drawNumbers(gc);
     }
 
+
+    public CellWidget[][] getCells() {
+        return this.cells;
+    }
 }
