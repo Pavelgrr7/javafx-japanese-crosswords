@@ -39,6 +39,8 @@ public class HelloApplication extends Application {
 
         if (selectedFile != null) {
             //использую encoder для расшифровки файла
+
+            // обязательно загляните в класс Encoder
             Encoder ec = new Encoder(selectedFile);
 //            ec.encodeFile();
             String fileContent = ec.decodeFile();

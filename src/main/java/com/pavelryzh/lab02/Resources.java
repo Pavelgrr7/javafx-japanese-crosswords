@@ -20,7 +20,6 @@ public class Resources {
     private static InputStreamReader reader;
     public static CanvasNumbers numbers;
     private static CellWidget.State[][] cellWidgetStates;
-    private static CellWidget.State[] currCellState;
 
     public static int maxCanvasSize = (int) Math.min(Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight());
     public static int CANVAS_WIDTH = maxCanvasSize - maxCanvasSize / 8;
@@ -51,7 +50,6 @@ public class Resources {
     public void getSize() throws IOException {
 
         BufferedReader bufferedReader = new BufferedReader(new StringReader(str));
-
         String firstLine = bufferedReader.readLine();
         if (firstLine != null) {
             WIDTH = firstLine.replaceAll("[^01]", "").length();
@@ -72,7 +70,7 @@ public class Resources {
         if (HEIGHT < 10 || WIDTH < 10) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error!");
-            alert.setHeaderText("Uploaded field is too small!");
+            alert.setHeaderText("Uploaded field is too small! Minimal size is 10x10.");
             alert.setContentText("Try to upload larger field.");
             alert.showAndWait();
             throw new IllegalStateException("Field is too small!");
@@ -84,7 +82,7 @@ public class Resources {
     public static FieldWidget.State getState() throws IOException {
 
         cellWidgetStates = new CellWidget.State[WIDTH][HEIGHT];
-        currCellState = new CellWidget.State[WIDTH];
+        CellWidget.State[] currCellState = new CellWidget.State[WIDTH];
 
         int cell;
         int i = 0;
@@ -103,6 +101,7 @@ public class Resources {
             } else {
                 currCellState[i] = CellWidget.State.EMPTY;
             }
+            System.out.println(j + " " + i + " " + fileCell);
             numbers.addElement(j, i, fileCell);
             i++;
             if (i == WIDTH) {
@@ -113,9 +112,6 @@ public class Resources {
         }
 
         numbers.finishProcessing();
-//        System.out.printf("%s, \n %s \n", numbers.getRowSequences(), numbers.getColumnSequences());
-//        System.out.println(countPadding());
-//        System.out.printf("addit.: %s %s", Arrays.deepToString(cellWidgetStates), Arrays.deepToString(currCellState));
         return new FieldWidget.State(cellWidgetStates);
     }
 
@@ -131,31 +127,6 @@ public class Resources {
             maxNum = Math.max(maxNum, count);
         }
         PADDING = (int) Math.max( Math.pow(CANVAS_HEIGHT, 1.04) / Math.pow(HEIGHT, 1.18), CANVAS_WIDTH * 0.2);
-//        System.out.println("PADDING: " + Math.pow(maxNum, 1.2) + " " +  (CANVAS_HEIGHT) / Math.pow(HEIGHT, 1.2) + " "  + HEIGHT * Math.pow(maxNum, 2));
     }
-//        PADDING = countPadding() * CELL_SIZE;
-//        System.out.println("setPadding " + PADDING);
-//        System.out.println("width " + " " + WIDTH + " " + CANVAS_WIDTH);
-//        System.out.println("height " + CANVAS_HEIGHT);
-//        CELL_WIDTH = (CANVAS_WIDTH - PADDING  ) / WIDTH;
-//        CELL_HEIGHT = (CANVAS_HEIGHT - PADDING ) / HEIGHT;
-
-//
-//
-//    public static int getMaxRowHints() {
-//        int maxRowHints = 0;
-//        for (List<Integer> rowSequence : numbers.getRowSequences()) {
-//            maxRowHints = Math.max(maxRowHints, rowSequence.size());
-//        }
-//        return maxRowHints;
-//    }
-//
-//    public static int getMaxColumnHints() {
-//        int maxColumnHints = 0;
-//        for (List<Integer> colSequence : numbers.getColumnSequences()) {
-//            maxColumnHints = Math.max(maxColumnHints, colSequence.size());
-//        }
-//        return maxColumnHints;
-//    }
 
 }

@@ -37,6 +37,8 @@ public class CanvasNumbers {
             columnSequences.add(new ArrayList<>());
         }
 
+        System.out.println("Number of rows: " + rows);
+        System.out.println("Number of columns: " + cols);
         currentRowCounts = new int[rows];
         currentColCounts = new int[cols];
     }
@@ -111,6 +113,7 @@ public class CanvasNumbers {
                     k++;
                 } catch (IndexOutOfBoundsException ignored) {
                     System.out.println("index out of bounds: " + k + " " + max);
+                    break;
                 }
             }
             if (count < FIELD_WIDTH - 1) count++;
