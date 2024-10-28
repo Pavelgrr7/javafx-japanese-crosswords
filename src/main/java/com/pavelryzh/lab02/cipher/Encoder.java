@@ -1,10 +1,13 @@
 package com.pavelryzh.lab02.cipher;
 
-import ru.pavelryzhenkov.lab11.VigenereCipher;
-
 import java.io.*;
 
 public class Encoder {
+
+    /**
+     * Encoder class uses VinegereCipher.kt, which I took from my mini-project
+     * it encodes the string by key with an individual offset for each letter, so it is much more secure than the Caesar cipher
+     * */
 
     static final String key = "ABCDA";
     private File file;
@@ -14,7 +17,6 @@ public class Encoder {
     }
 
     public void encodeFile() throws IOException {
-        System.out.println("encodeFile called");
         StringBuilder encodedMatrix = new StringBuilder();
         String line;
 

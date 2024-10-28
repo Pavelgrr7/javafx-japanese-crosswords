@@ -5,7 +5,6 @@ import com.pavelryzh.lab02.ui.CellWidget;
 import com.pavelryzh.lab02.ui.FieldWidget;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseButton;
 
 import static com.pavelryzh.lab02.Resources.*;
 
@@ -21,7 +20,6 @@ public class CanvasFieldWidget implements FieldWidget {
     public static FieldState fieldState;
     public static int WIDTH;
     public static int HEIGHT;
-    public static Resources res;
 
     public CanvasFieldWidget(Canvas canvas) {
         Resources.setPadding();
@@ -30,7 +28,6 @@ public class CanvasFieldWidget implements FieldWidget {
         WIDTH = Resources.CELL_WIDTH;
         HEIGHT = Resources.CELL_HEIGHT;
 
-        //System.out.printf("%s %s %s %s \n", FIELD_WIDTH, FIELD_HEIGHT, WIDTH, HEIGHT);
         CanvasFieldWidget.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
 
@@ -39,7 +36,6 @@ public class CanvasFieldWidget implements FieldWidget {
         for(int i = 0; i < FIELD_WIDTH; i++) {
             for(int j = 0; j < FIELD_HEIGHT; j++) {
                 cells[i][j] = new CanvasCellWidget(i * WIDTH, j * HEIGHT, canvas);
-                //cells[i][j].setOnClickListener((t,l) -> listener.onClick(cellX, cellY));
             }
         }
         canvas.setOnMouseClicked(event -> {
@@ -48,13 +44,8 @@ public class CanvasFieldWidget implements FieldWidget {
 
             int cellX = (int) (mouseX) - PADDING;
             int cellY = (int) (mouseY) - PADDING;
-
-            //if (cellX >= 0 && cellX < FIELD_WIDTH && cellY >= 0 && cellY < FIELD_HEIGHT) {
-                if (listener != null) {
-                //if (cellX >  && cellY > PADDING) {
-                    listener.onClick(cellX / CELL_WIDTH, cellY / CELL_HEIGHT, event.getButton());
-                //}
-
+            if (listener != null) {
+                listener.onClick(cellX / CELL_WIDTH, cellY / CELL_HEIGHT, event.getButton());
             } else System.out.println("listener is null.");
         });
     }
@@ -96,10 +87,5 @@ public class CanvasFieldWidget implements FieldWidget {
 
     public void drawNums(GraphicsContext gc) {
         numbers.drawNumbers(gc);
-    }
-
-
-    public CellWidget[][] getCells() {
-        return this.cells;
     }
 }

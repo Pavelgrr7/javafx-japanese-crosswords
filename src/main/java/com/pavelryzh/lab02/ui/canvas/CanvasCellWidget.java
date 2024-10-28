@@ -1,6 +1,5 @@
 package com.pavelryzh.lab02.ui.canvas;
 
-//import com.pavelryzh.lab02.Resources;
 import com.pavelryzh.lab02.ui.CellWidget;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -15,7 +14,6 @@ public class CanvasCellWidget implements CellWidget {
     private final int y;
     private final Canvas canvas;
     private final GraphicsContext gc;
-    private OnClickListener listener;
 
     public CanvasCellWidget(int x, int y, Canvas canvas) {
         this.x = x + PADDING;
@@ -23,39 +21,6 @@ public class CanvasCellWidget implements CellWidget {
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
 
-//        canvas.setOnMouseClicked( e -> {
-//            if (listener != null &&
-//                    e.getX() > x * WIDTH && e.getX() < (x + 1) * WIDTH &&
-//                    e.getY() > y * HEIGHT && e.getY() < (y + 1) * HEIGHT) {
-//
-//                if (e.getButton() == MouseButton.PRIMARY) {
-//                    listener.onClick();
-//                }
-//            }
-//        });
-    }
-
-    @Override
-    public void setOnClickListener(OnClickListener listener) {
-        this.listener = listener;
-//        System.out.println("listener!");
-//        canvas.setOnMouseClicked(event -> {
-//            System.out.println("listener canvas!");
-//            double mouseX = event.getX();
-//            double mouseY = event.getY();
-//
-//            int cellX = (int) (mouseX);
-//            int cellY = (int) (mouseY);
-//
-//            // Проверяем, что клик произошел внутри поля
-//            if (listener != null && cellX >= 0 && cellX < FIELD_WIDTH && cellY >= 0 && cellY < FIELD_HEIGHT) {
-//                if (cellX > PADDING && cellY > PADDING) {
-//                    listener.onClick(cellX, cellY);
-//                    System.out.println("Клик по клетке на координатах2: " + cellX + ", " + cellY);
-//                } else System.out.println(cellX + ", " + cellY);
-//
-//            } else System.out.println("listener is null.");
-//        });
     }
 
     @Override
@@ -68,7 +33,6 @@ public class CanvasCellWidget implements CellWidget {
 
     @Override
     public void updateState(State state) {
-
         if (CanvasFieldWidget.fieldState == FieldState.ACTIVE) {
             drawField();
             switch (state) {

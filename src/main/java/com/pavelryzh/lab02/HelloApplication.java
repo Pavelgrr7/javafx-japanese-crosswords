@@ -6,42 +6,55 @@ import com.pavelryzh.lab02.ui.FieldWidget;
 import com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget;
 import javafx.application.Application;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
-import java.util.Arrays;
+
 
 import static com.pavelryzh.lab02.Resources.*;
 import static com.pavelryzh.lab02.ui.FieldWidget.FieldState.*;
 import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.*;
+
+
 public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
 
-        VBox vBox = new VBox();
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open File");
         fileChooser.setInitialDirectory(new File("assets/crossword"));
         File selectedFile = (fileChooser.showOpenDialog(stage));
+        StackPane stackPane = null;
+
         if (selectedFile != null) {
             //использую encoder для расшифровки файла
             Encoder ec = new Encoder(selectedFile);
 //            ec.encodeFile();
             String fileContent = ec.decodeFile();
-            System.out.println(fileContent);
+
             //передаю строку с полем в ресурсы для расчёта необходимых констант
             Resources res = new Resources(fileContent);
+
             Canvas canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-            vBox.getChildren().add(canvas);
-            CellWidget.State[][] cellWidgetState = new CellWidget.State[res.WIDTH][res.HEIGHT];
+
+            Button surrenderBtn = new Button();
+            surrenderBtn.setText("Я сдаюсь!");
+            StackPane.setAlignment(surrenderBtn, javafx.geometry.Pos.TOP_LEFT);
+            stackPane = new StackPane(canvas, surrenderBtn);
+            StackPane.setMargin(surrenderBtn, new Insets(10, 0, 0, 10));
+
+            CellWidget.State[][] cellWidgetState = new CellWidget.State[Resources.WIDTH][Resources.HEIGHT];
             for (int i = 0; i < FIELD_WIDTH; i++) {
                 for (int j = 0; j < FIELD_HEIGHT; j++) {
                     cellWidgetState[i][j] = CellWidget.State.NULL;
@@ -53,7 +66,7 @@ public class HelloApplication extends Application {
             fieldWidget = new CanvasFieldWidget(canvas);
 
             //получаю матрицу с полем
-            cellWidgetState = (res.state).cells();
+            cellWidgetState = (Resources.state).cells();
             state = new FieldWidget.State(cellWidgetState);
 
             fieldWidget.setFieldState(ACTIVE);
@@ -61,45 +74,53 @@ public class HelloApplication extends Application {
             //отрисовываю числа-подсказки
             fieldWidget.drawNums(canvas.getGraphicsContext2D());
 
+            final EndObserver gameEndObserver = new GameEndObserver(fieldWidget, state.cells());
+
             //вешаю слушатель на поле
             fieldWidget.setOnCellClickListener(new OnCellClickListener() {
-                EndObserver gameEndObserver = new GameEndObserver(fieldWidget, state.cells());
+
 
                 @Override
                 public void onClick(int x, int y, MouseButton button) {
-                    //System.out.println("Clicked: " + x + ", " + y);
-                    if (fieldWidget.getFieldState() == WIN) return;
-                    if (button == MouseButton.PRIMARY ) {
-                        System.out.println(state.cells()[y][x]);
+                    if (fieldWidget.getFieldState() == WIN || fieldWidget.getFieldState() == INACTIVE) return;
+                    if (button == MouseButton.PRIMARY) {
+                        //System.out.println(state.cells()[y][x]);
 
-                        switch(state.cells()[y][x]) {
+                        // для удобства дальнейшей обработки заменяю клетки на 'открыто верно\неверно', либо обратно, если пользователь снова нажал по клетке
+                        switch (state.cells()[y][x]) {
                             case CellWidget.State.FILLED -> state.cells()[y][x] = CellWidget.State.OPEN_RIGHT;
                             case CellWidget.State.EMPTY -> state.cells()[y][x] = CellWidget.State.OPEN_WRONG;
-                            case CellWidget.State.OPEN_RIGHT ->
-                                state.cells()[y][x] = CellWidget.State.FILLED;
-                                //countRight++;
+                            case CellWidget.State.OPEN_RIGHT -> state.cells()[y][x] = CellWidget.State.FILLED;
 
                             case CellWidget.State.OPEN_WRONG -> state.cells()[y][x] = CellWidget.State.EMPTY;
                         }
+                        // передаю изменившуюся клетку в класс, наблюдающий за полем в ожидании состояния победы
                         gameEndObserver.cellStateChanged(state.cells()[y][x]);
-                    } else {
+                    } else if (button == MouseButton.SECONDARY || button == MouseButton.MIDDLE) {
+                        // ставится точка и клетка блокируется
                         switch (state.cells()[y][x]) {
                             case CellWidget.State.EMPTY, CellWidget.State.FILLED ->
                                     state.cells()[y][x] = CellWidget.State.POINT;
                             case CellWidget.State.POINT -> state.cells()[y][x] = CellWidget.State.EMPTY;
                         }
                     }
-//                    if (count == 5)
-//                        gameEndObserver.victoryNotification();
+                    // обновляю состояние поля
                     fieldWidget.updateState(state, x, y);
-//                    count++;
                 }
             });
 
+            //кнопка, если пользователь решит сдатся
+            surrenderBtn.setOnMouseClicked(event -> {
+                if (event.getButton() == MouseButton.PRIMARY) {
+                    gameEndObserver.surrenderNotification();
+                }
+            });
         } else System.exit(1);
-        vBox.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(vBox);
-        stage.setTitle("WIP");
+
+        stackPane.setAlignment(Pos.CENTER);
+
+        Scene scene = new Scene(stackPane);
+        stage.setTitle("Японский кроссворд!");
         stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
@@ -108,11 +129,4 @@ public class HelloApplication extends Application {
     public static void main(String[] args) {
         launch();
     }
-
-//    public record FieldState(CanvasCellWidget[][] cells) {
-//
-//
-//        public record Notification(int code) {
-//        }
-//    }
 }

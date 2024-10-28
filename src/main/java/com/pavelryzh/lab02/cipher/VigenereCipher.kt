@@ -1,4 +1,4 @@
-package ru.pavelryzhenkov.lab11
+package com.pavelryzh.lab02.cipher
 
 class VigenereCipher(private var text: String, private var key: String) {
 
@@ -74,7 +74,7 @@ class VigenereCipher(private var text: String, private var key: String) {
 
         var decodedNumbers = ""
         decodedText.forEachIndexed { _, char ->
-            decodedNumbers += (char.code - 65 + 48).toChar() // Восстановление цифры
+            decodedNumbers += (char.code - 65 + 48).toChar() // восстановление цифры
         }
 
         return decodedNumbers

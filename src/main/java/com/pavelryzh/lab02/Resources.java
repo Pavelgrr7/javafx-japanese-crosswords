@@ -5,15 +5,12 @@ import com.pavelryzh.lab02.ui.FieldWidget;
 import com.pavelryzh.lab02.ui.canvas.CanvasNumbers;
 //import com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.*;
 //import javafx.geometry.Rectangle2D;
+import javafx.scene.control.Alert;
 import javafx.stage.Screen;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-//import java.util.List;
-
-//import static com.pavelryzh.lab02.ui.canvas.CanvasFieldWidget.FIELD_WIDTH;
-
 
 public class Resources {
 
@@ -73,7 +70,13 @@ public class Resources {
 
         // minimal field size: 10
         if (HEIGHT < 10 || WIDTH < 10) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setHeaderText("Uploaded field is too small!");
+            alert.setContentText("Try to upload larger field.");
+            alert.showAndWait();
             throw new IllegalStateException("Field is too small!");
+
         }
         numbers = new CanvasNumbers(WIDTH, HEIGHT);
     }
@@ -127,7 +130,7 @@ public class Resources {
             }
             maxNum = Math.max(maxNum, count);
         }
-        PADDING = (int) ((int) Math.pow(maxNum, 1.2) * Math.min( Math.pow(CANVAS_HEIGHT, 1.04) / Math.pow(HEIGHT, 1.18), HEIGHT * Math.pow(maxNum, 2)));
+        PADDING = (int) Math.max( Math.pow(CANVAS_HEIGHT, 1.04) / Math.pow(HEIGHT, 1.18), CANVAS_WIDTH * 0.2);
 //        System.out.println("PADDING: " + Math.pow(maxNum, 1.2) + " " +  (CANVAS_HEIGHT) / Math.pow(HEIGHT, 1.2) + " "  + HEIGHT * Math.pow(maxNum, 2));
     }
 //        PADDING = countPadding() * CELL_SIZE;

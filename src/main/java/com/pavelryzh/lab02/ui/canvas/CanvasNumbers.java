@@ -3,6 +3,7 @@ package com.pavelryzh.lab02.ui.canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,11 +41,6 @@ public class CanvasNumbers {
         currentColCounts = new int[cols];
     }
 
-//    public CanvasNumbers(File file) {
-//        this.file = file;
-//
-//    }
-
     public void addElement(int i, int j, int value) {
         if (value == 49) {
             currentRowCounts[i]++;
@@ -65,40 +61,37 @@ public class CanvasNumbers {
     // фиксиация оставшиеся последовательности
     public void finishProcessing() {
         for (int i = 0; i < rows; i++) {
-            if (currentRowCounts[i] > 0) {
-                rowSequences.get(i).add(currentRowCounts[i]);
-                if (rowSequences.get(i).size() > MAXROWNUMS) MAXROWNUMS = rowSequences.get(i).size();
-            }
+            rowSequences.get(i).add(currentRowCounts[i]);
+            if (rowSequences.get(i).size() > MAXROWNUMS) MAXROWNUMS = rowSequences.get(i).size();
         }
 
         for (int j = 0; j < cols; j++) {
-            if (currentColCounts[j] > 0) {
-                columnSequences.get(j).add(currentColCounts[j]);
-                if (columnSequences.get(j).size() > MAXCOLNUMS) MAXCOLNUMS = columnSequences.get(j).size();
-            }
+            columnSequences.get(j).add(currentColCounts[j]);
+            //System.out.println(columnSequences.get(j).size() + " " + columnSequences.get(j));
+            if (columnSequences.get(j).size() > MAXCOLNUMS) MAXCOLNUMS = columnSequences.get(j).size();
         }
     }
 
 
-    public List<List<Integer>> getRowSequences() {
-        return rowSequences;
-    }
-
-    public List<List<Integer>> getColumnSequences() {
-        return columnSequences;
-    }
+//    public List<List<Integer>> getRowSequences() {
+//        return rowSequences;
+//    }
+//
+//    public List<List<Integer>> getColumnSequences() {
+//        return columnSequences;
+//    }
 
     public void drawNumbers(GraphicsContext gc) {
-        int XPADDING = CELL_WIDTH / 2;
-        int YPADDING = CELL_HEIGHT / 2;
+        int XPADDING = (int) (CELL_WIDTH / 2.1);
+        int YPADDING = (int) (CELL_HEIGHT / 2.1);
         int max = Math.max(MAXROWNUMS, MAXCOLNUMS);
-        gc.setFont(new Font("Consolas", Math.pow((double) PADDING / max, 0.75)));
-        System.out.println(Math.pow(max, 1.3));
 
-        int numSize = (int) ((PADDING * 1.2 +  max) / max);
+        gc.setFont(new Font("Consolas", Math.pow((double) PADDING / max, 0.85)));
+//        System.out.println("max:" + max);
+
+        int numSize = (PADDING + max) / max;
         int count = 0;
-
-        for (int i = PADDING; i + XPADDING < CANVAS_WIDTH; i += CELL_WIDTH) {
+        for (int i = PADDING; i + PADDING / 4 - 1< CANVAS_WIDTH + CELL_WIDTH /2; i += CELL_WIDTH) {
             while (columnSequences.get(count).size() < MAXCOLNUMS) {
                 columnSequences.get(count).add(0);
             }
@@ -106,30 +99,21 @@ public class CanvasNumbers {
                 rowSequences.get(count).add(0);
             }
             int k = 0;
-            for (int j = YPADDING; j < PADDING; j += numSize) {
-//                System.out.println(j + " and " + i);
-                if (columnSequences.get(count).get(k) == 0) gc.fillText(" ", i + XPADDING, j);
-                else gc.fillText(String.valueOf(columnSequences.get(count).get(k)), i + XPADDING, j);
+            int j = YPADDING - 1;
+            while (k < max - 1) {
+                try {
+                    if (columnSequences.get(count).get(k) == 0) gc.fillText(" ", i + XPADDING, j);
+                    else gc.fillText(String.valueOf(columnSequences.get(count).get(k)), i + XPADDING, j);
 
-                if (rowSequences.get(count).get(k) == 0) gc.fillText(" ", j, i + XPADDING);
-                else gc.fillText(String.valueOf(rowSequences.get(count).get(k)), j, i + XPADDING);
-
-                k++;
+                    if (rowSequences.get(count).get(k) == 0) gc.fillText(" ", j, i + XPADDING);
+                    else gc.fillText(String.valueOf(rowSequences.get(count).get(k)), j, i + XPADDING);
+                    j += numSize;
+                    k++;
+                } catch (IndexOutOfBoundsException ignored) {
+                    System.out.println("index out of bounds: " + k + " " + max);
+                }
             }
             if (count < FIELD_WIDTH - 1) count++;
         }
-//        for (int i = PADDING; i < CANVAS_HEIGHT; i += HEIGHT) {
-//            while (rowSequences.get(count).size() < MAXROWNUMS) {
-//                rowSequences.get(count).add(0);
-//            }
-//            int k = 0;
-//
-//            for (int j = 10; j < PADDING; j += numSize) {
-//                if (rowSequences.get(count).get(k) == 0) gc.fillText(" ", i, j);
-//
-//                k++;
-//            }
-//            if (count < 4) count++;
-//        }
     }
 }

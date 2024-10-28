@@ -1,7 +1,7 @@
 import random
 
 # Set the filename and the number of lines and length of each line
-filename = 'test2.txt'
+filename = 'test11.txt'
 num_lines = 11
 line_length = 11
 
